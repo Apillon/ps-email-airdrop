@@ -1,0 +1,11 @@
+{
+  "name": "email-airdrop",
+  "version": "1.0.0",
+  "description": "Prebuild solution for Email Airdrop via Apillon API.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Apillon",
+  "license": "ISC"
+}
