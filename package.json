@@ -4,7 +4,7 @@
   "description": "Prebuild solution for Email Airdrop via Apillon API.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx jest --config jestconfig.json --forceExit --detectOpenHandles --runInBand",
     "development:run": "node -r ts-node/register --inspect ./src/scripts/start-http",
     "dev": "npm run development:run",
     "tsc": "tsc",
@@ -33,7 +33,10 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.10",
+    "@types/supertest": "^2.0.16",
     "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "supertest": "^6.3.3",
     "typescript": "^5.3.2",
     "ts-mysql-migrate": "^1.0.2"
   },
