@@ -22,10 +22,10 @@ export function inject(app: Application) {
  */
 // @ts-ignore
 export async function resolve(req: Request, res: Response): Promise<void> {
-  // writeLog(LogType.ERROR, 'Test ERROR!');
-  // writeLog(LogType.INFO, 'Test INFO!');
-  // writeLog(LogType.MESSAGE, 'Test MESSAGE!');
-  // writeLog(LogType.SQL, 'Test SQL!');
+  // writeLog(LogType.ERROR, "Test ERROR!");
+  // writeLog(LogType.INFO, "Test INFO!");
+  // writeLog(LogType.MESSAGE, "Test MESSAGE!");
+  // writeLog(LogType.SQL, "Test SQL!");
 
   return res.respond(200, {
     name: "email-airdrop",
