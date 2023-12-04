@@ -5,11 +5,7 @@ export enum SerializedStrategy {
   PROFILE = "profile",
   DB = "db",
   EXTENDED_DB = "extended_db",
-  SNAPSHOT = "snapshot",
   ADMIN = "admin",
-  SELF = "self",
-  EXTERNAL = "external",
-  IMAGE = "image",
 }
 
 /**
@@ -26,8 +22,7 @@ export enum PopulateStrategy {
  */
 export enum DefaultUserRoles {
   ADMIN = 1,
-  DISTRIBUTOR = 2,
-  USER = 3,
+  USER = 2,
 }
 
 /**
@@ -42,7 +37,7 @@ export enum PaginationValues {
  * Request Token types.
  */
 export enum RequestToken {
-  CREATE_PROFILE = "createProfile",
+  AUTH_ADMIN = "authAdmin",
 }
 
 /**
@@ -69,6 +64,11 @@ export enum AuthorizationErrorCode {
  */
 export enum ValidatorErrorCode {
   DEFAULT = 422000,
+  PROFILE_EMAIL_NOT_PRESENT = 422001,
+  PROFILE_EMAIL_NOT_VALID = 422002,
+  PROFILE_EMAIL_ALREADY_TAKEN = 422003,
+  DATA_MODEL_STATUS_MISSING = 422100,
+  DATA_MODEL_INVALID_STATUS = 422101,
 }
 
 /**
@@ -76,7 +76,7 @@ export enum ValidatorErrorCode {
  */
 export enum RouteErrorCode {
   INVALID_REQUEST = 400000,
-  // PROFILE_NOT_IDENTIFIED = 400001,
+  PROFILE_NOT_IDENTIFIED = 400001,
   PROFILE_CREDENTIALS_INVALID = 400002,
   REQUEST_TOKEN_INVALID = 400003,
 }
