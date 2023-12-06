@@ -5,12 +5,14 @@ import {
 } from "../helpers/context";
 import * as request from "supertest";
 import { setupTestDatabase, clearTestDatabase } from "../helpers/migrations";
+import { User } from "../../models/user";
 let stage: Stage;
 
-describe("create user", () => {
+describe("get user", () => {
   beforeAll(async () => {
     stage = await createContextAndStartServer();
     await setupTestDatabase();
+    await new User({}, stage.context).fake().create();
   });
 
   afterAll(async () => {
@@ -18,22 +20,11 @@ describe("create user", () => {
     await stopServerAndCloseMySqlContext(stage);
   });
 
-  test("Create user", async () => {
-    const data = {
-      users: [
-        {
-          email: "test@test.com",
-        },
-      ],
-    };
+  test("get user", async () => {
+    const res = await request(stage.app).get("/users");
+    //.set("Authorization", `Bearer ${authAdmin.token}`)
 
-    const res = await request(stage.app)
-      .post("/users")
-      //.set("Authorization", `Bearer ${authAdmin.token}`)
-      .send(data);
-
-    expect(res.status).toBe(201);
-    const dbRes = await stage.context.mysql.paramExecute("SELECT * FROM user");
-    expect(dbRes.length).toBeGreaterThan(0);
+    expect(res.body.data.items.length).toBe(1);
+    expect(res.body.data.total).toBe(1);
   });
 });
