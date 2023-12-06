@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { NextFunction, Request, Response } from "../http";
-import { DefaultUserRoles, PopulateStrategy } from "../config/values";
+import { PopulateStrategy } from "../config/values";
 import { AuthenticateAdmin } from "../middlewares/authentication";
 import { BatchUsers } from "../models/batch-users";
 import { ValidationError } from "../lib/errors";

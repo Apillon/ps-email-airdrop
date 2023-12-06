@@ -12,6 +12,7 @@ import { inject as injectDataParser } from "./middlewares/parser";
 import { inject as injectRenders } from "./middlewares/renders";
 import { inject as injectGetRoot } from "./routes/get-root";
 import { inject as injectCreateUser } from "./routes/create-user";
+import { inject as injectGetUser } from "./routes/get-user";
 
 export interface Request extends express.Request {
   context: Context;
@@ -67,6 +68,7 @@ export class HttpServer {
     // ROUTES
     injectGetRoot(this.app);
     injectCreateUser(this.app);
+    injectGetUser(this.app);
 
     // ERROR HANDLER
     injectErrors(this.app);
