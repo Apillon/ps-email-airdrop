@@ -138,3 +138,7 @@ export async function selectAndCountQuery(
 
   return { items, total };
 }
+
+export function dateToSqlString(date: Date): string {
+  return date.toISOString().replace(/T/, " ").replace(/Z/, "");
+}
