@@ -26,7 +26,7 @@ export class Context {
    * @param req ExpressJS request object.
    */
   public async authenticateAdmin(token: string) {
-    const data = await readAdminAuthToken(token, this);
+    const data = await readAdminAuthToken(token);
     if (data && data.wallet) {
       this.isAdmin = true;
       return this;

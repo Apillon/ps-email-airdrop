@@ -38,6 +38,7 @@ export enum PaginationValues {
  */
 export enum RequestToken {
   AUTH_ADMIN = "authAdmin",
+  AIRDROP_EMAIL = "airdropEmail",
 }
 
 /**
