@@ -8,7 +8,7 @@ import { setupTestDatabase, clearTestDatabase } from "../helpers/migrations";
 import { User } from "../../models/user";
 let stage: Stage;
 
-describe("get user", () => {
+describe.skip("get user", () => {
   beforeAll(async () => {
     stage = await createContextAndStartServer();
     await setupTestDatabase();

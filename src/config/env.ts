@@ -37,6 +37,10 @@ export interface IEnv {
   MYSQL_USER_TEST: string;
   MYSQL_PASSWORD_TEST: string;
   MYSQL_POOL_TEST: number;
+
+  APILLON_KEY: string;
+  APILLON_SECRET: string;
+  COLLECTION_UUID: string;
 }
 /**
  * Load variables from .env.
@@ -113,4 +117,11 @@ export const env = {
   MYSQL_USER_TEST: process.env["MYSQL_USER_TEST"],
   MYSQL_PASSWORD_TEST: process.env["MYSQL_PASSWORD_TEST"],
   MYSQL_POOL_TEST: parseInt(process.env["MYSQL_POOL_TEST"]),
+
+  /**
+   * Apillon
+   */
+  APILLON_KEY: process.env["APILLON_KEY"],
+  APILLON_SECRET: process.env["APILLON_SECRET"],
+  COLLECTION_UUID: process.env["COLLECTION_UUID"],
 };

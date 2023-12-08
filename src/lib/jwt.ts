@@ -8,7 +8,7 @@ import { env } from "../config/env";
  * @param email
  * @param ctx
  */
-export async function generateEmailAirdropToken(email: string) {
+export function generateEmailAirdropToken(email: string) {
   if (!email) {
     return null;
   }
@@ -47,7 +47,7 @@ export function generateAdminAuthToken(wallet: string, exp?: string | number) {
  * @param token Authentication token.
  * @param ctx Request context.
  */
-export async function readAdminAuthToken(token: string) {
+export function readAdminAuthToken(token: string) {
   const subject = RequestToken.AUTH_ADMIN;
   try {
     const { wallet } = jwt.verify(token, env.APP_SECRET, {
@@ -71,7 +71,7 @@ export async function readAdminAuthToken(token: string) {
  * @param token Request token.
  * @param ctx Request context.
  */
-export async function readEmailAirdropToken(token: string) {
+export function readEmailAirdropToken(token: string) {
   const subject = RequestToken.AIRDROP_EMAIL;
   try {
     const { email } = jwt.verify(token, env.APP_SECRET, {

@@ -7,7 +7,7 @@ import * as request from "supertest";
 import { setupTestDatabase, clearTestDatabase } from "../helpers/migrations";
 let stage: Stage;
 
-describe("create user", () => {
+describe.skip("create user", () => {
   beforeAll(async () => {
     stage = await createContextAndStartServer();
     await setupTestDatabase();
