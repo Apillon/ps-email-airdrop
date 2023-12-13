@@ -193,13 +193,14 @@ export class User extends BaseSqlModel {
     }
 
     let serializedStrategy = SerializedStrategy.ADMIN;
-
     const sqlQuery = {
       qSelect: `
         SELECT
           u.id, u.email,
           u.tx_hash, u.status,
-          u.createTime, u.updateTime
+          u.createTime, u.updateTime,
+          u.airdrop_status, u.email_start_send_time,
+          u.email_sent_time, u.wallet
         `,
       qFrom: `
         FROM user u

@@ -14,6 +14,7 @@ import { inject as injectGetRoot } from "./routes/get-root";
 import { inject as injectCreateUser } from "./routes/create-user";
 import { inject as injectGetUser } from "./routes/get-user";
 import { inject as injectClaimAidrop } from "./routes/claim-airdrop";
+import { inject as injectAdminLogin } from "./routes/admin-login";
 
 export interface Request extends express.Request {
   context: Context;
@@ -71,6 +72,7 @@ export class HttpServer {
     injectCreateUser(this.app);
     injectGetUser(this.app);
     injectClaimAidrop(this.app);
+    injectAdminLogin(this.app);
 
     // ERROR HANDLER
     injectErrors(this.app);

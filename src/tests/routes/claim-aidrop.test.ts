@@ -6,7 +6,10 @@ import {
 import * as request from "supertest";
 import { setupTestDatabase, clearTestDatabase } from "../helpers/migrations";
 import { AirdropStatus, User } from "../../models/user";
-import { generateEmailAirdropToken } from "../../lib/jwt";
+import {
+  generateAdminAuthToken,
+  generateEmailAirdropToken,
+} from "../../lib/jwt";
 import { ethers } from "ethers";
 
 let stage: Stage;
@@ -34,10 +37,7 @@ describe("claim airdrop", () => {
       jwt: generateEmailAirdropToken(user.email),
     };
 
-    const res = await request(stage.app)
-      .post("/users/claim")
-      //.set("Authorization", `Bearer ${authAdmin.token}`)
-      .send(data);
+    const res = await request(stage.app).post("/users/claim").send(data);
 
     expect(res.status).toBe(200);
     const fetchUser = await new User({}, stage.context).populateByEmail(

@@ -5,10 +5,14 @@ import {
 } from "../helpers/context";
 import * as request from "supertest";
 import { setupTestDatabase, clearTestDatabase } from "../helpers/migrations";
+import { env } from "../../config/env";
+import { generateAdminAuthToken } from "../../lib/jwt";
 let stage: Stage;
+let token;
 
-describe.skip("create user", () => {
+describe("create user", () => {
   beforeAll(async () => {
+    token = generateAdminAuthToken(env.ADMIN_WALLET);
     stage = await createContextAndStartServer();
     await setupTestDatabase();
   });
@@ -29,7 +33,7 @@ describe.skip("create user", () => {
 
     const res = await request(stage.app)
       .post("/users")
-      //.set("Authorization", `Bearer ${authAdmin.token}`)
+      .set("Authorization", `Bearer ${token}`)
       .send(data);
 
     expect(res.status).toBe(201);
