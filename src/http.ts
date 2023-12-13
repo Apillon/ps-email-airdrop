@@ -13,7 +13,7 @@ import { inject as injectRenders } from "./middlewares/renders";
 import { inject as injectGetRoot } from "./routes/get-root";
 import { inject as injectCreateUser } from "./routes/create-user";
 import { inject as injectGetUser } from "./routes/get-user";
-import { inject as injectClaimAidrop } from "./routes/claim-airdrop";
+import { inject as injectClaimAirdrop } from "./routes/claim-airdrop";
 import { inject as injectAdminLogin } from "./routes/admin-login";
 
 export interface Request extends express.Request {
@@ -69,9 +69,9 @@ export class HttpServer {
 
     // ROUTES
     injectGetRoot(this.app);
+    injectClaimAirdrop(this.app);
     injectCreateUser(this.app);
     injectGetUser(this.app);
-    injectClaimAidrop(this.app);
     injectAdminLogin(this.app);
 
     // ERROR HANDLER

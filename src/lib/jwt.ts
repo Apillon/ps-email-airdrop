@@ -12,7 +12,7 @@ export function generateEmailAirdropToken(email: string) {
   if (!email) {
     return null;
   }
-  const exp = "1m";
+  const exp = "30 days";
   const subject = RequestToken.AIRDROP_EMAIL;
   const token = jwt.sign({ email }, env.APP_SECRET, {
     subject,
@@ -77,6 +77,7 @@ export function readEmailAirdropToken(token: string) {
     const { email } = jwt.verify(token, env.APP_SECRET, {
       subject,
     }) as any;
+    console.log();
     if (email) {
       return {
         email: email as string,
