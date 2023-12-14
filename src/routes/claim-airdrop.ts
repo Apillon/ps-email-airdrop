@@ -4,7 +4,7 @@ import { RouteErrorCode } from "../config/values";
 import { ResourceError } from "../lib/errors";
 import { readEmailAirdropToken } from "../lib/jwt";
 import { AirdropStatus, User } from "../models/user";
-import { Identity, Nft } from "@apillon/sdk";
+import { Identity, LogLevel, Nft } from "@apillon/sdk";
 import { LogType, writeLog } from "../lib/logger";
 import { env } from "../config/env";
 
@@ -65,6 +65,7 @@ export async function resolve(req: Request, res: Response): Promise<void> {
   const collection = new Nft({
     key: env.APILLON_KEY,
     secret: env.APILLON_SECRET,
+    logLevel: LogLevel.VERBOSE,
   }).collection(env.COLLECTION_UUID);
 
   try {
@@ -73,7 +74,13 @@ export async function resolve(req: Request, res: Response): Promise<void> {
       ? AirdropStatus.AIRDROP_COMPLETED
       : AirdropStatus.AIRDROP_ERROR;
   } catch (e) {
-    writeLog(LogType.ERROR, e, "claim-airdrop.ts", "resolve");
+    writeLog(
+      LogType.ERROR,
+      "Error creating airdrop",
+      "claim-airdrop.ts",
+      "resolve",
+      e
+    );
     user.airdrop_status = AirdropStatus.AIRDROP_ERROR;
   }
 
