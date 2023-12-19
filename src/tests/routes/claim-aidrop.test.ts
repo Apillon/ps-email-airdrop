@@ -6,11 +6,9 @@ import {
 import * as request from "supertest";
 import { setupTestDatabase, clearTestDatabase } from "../helpers/migrations";
 import { AirdropStatus, User } from "../../models/user";
-import {
-  generateAdminAuthToken,
-  generateEmailAirdropToken,
-} from "../../lib/jwt";
+import { generateEmailAirdropToken } from "../../lib/jwt";
 import { ethers } from "ethers";
+import { Identity } from "@apillon/sdk";
 
 let stage: Stage;
 let user: User;
@@ -32,8 +30,14 @@ describe("claim airdrop", () => {
   test("successfully claims", async () => {
     const wallet = ethers.Wallet.createRandom();
 
+    const identity = new Identity();
+    const message = identity.generateSigningMessage("test");
+    const signature = await wallet.signMessage(message.message);
+
     const data = {
-      signature: wallet.address,
+      address: wallet.address,
+      timestamp: message.timestamp,
+      signature,
       jwt: generateEmailAirdropToken(user.email),
     };
 
@@ -43,8 +47,7 @@ describe("claim airdrop", () => {
     const fetchUser = await new User({}, stage.context).populateByEmail(
       user.email
     );
-    //expect(fetchUser.airdrop_status).toEqual(AirdropStatus.AIRDROP_COMPLETED);
+    expect(fetchUser.airdrop_status).toEqual(AirdropStatus.AIRDROP_COMPLETED);
     expect(fetchUser.wallet).toEqual(wallet.address);
-    expect(fetchUser.airdrop_status).toEqual(AirdropStatus.AIRDROP_ERROR);
   });
 });
