@@ -10,7 +10,7 @@ import { Identity } from "@apillon/sdk";
 let stage: Stage;
 let adminWallet: HDNodeWallet;
 
-describe.only("admin login", () => {
+describe("admin login", () => {
   beforeAll(async () => {
     adminWallet = Wallet.createRandom();
     stage = await createContextAndStartServer({
