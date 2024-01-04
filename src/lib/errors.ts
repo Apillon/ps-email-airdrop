@@ -56,7 +56,7 @@ export class ResourceError extends Error {
 
     writeLog(
       LogType.ERROR,
-      `(id: ${ctx.id} : "NA"})`,
+      `(id: ${ctx?.id} : "NA"})`,
       "ResourceError",
       sourceFunction,
       this

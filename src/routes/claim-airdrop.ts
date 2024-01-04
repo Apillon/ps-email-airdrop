@@ -1,16 +1,14 @@
 import { Application } from "express";
 import { NextFunction, Request, Response } from "../http";
-import { PopulateStrategy, RouteErrorCode } from "../config/values";
-import { AuthenticateAdmin } from "../middlewares/authentication";
-import { BatchUsers } from "../models/batch-users";
-import { ResourceError, ValidationError } from "../lib/errors";
+import { RouteErrorCode } from "../config/values";
+import { ResourceError } from "../lib/errors";
 import { readEmailAirdropToken } from "../lib/jwt";
 import { AirdropStatus, User } from "../models/user";
-import { Nft } from "@apillon/sdk";
+import { Identity, LogLevel, Nft } from "@apillon/sdk";
 import { LogType, writeLog } from "../lib/logger";
 import { env } from "../config/env";
 
-/**
+/**∂
  * Installs new route on the provided application.
  * @param app ExpressJS application.
  */
@@ -26,16 +24,28 @@ export function inject(app: Application) {
 export async function resolve(req: Request, res: Response): Promise<void> {
   const { context, body } = req;
 
-  if (!body.signature) {
+  if (!body.signature || !body.address) {
     throw new ResourceError(RouteErrorCode.SIGNATURE_NOT_PRESENT);
   }
 
-  // TODO get wallet:
-  const wallet = body.signature;
+  const identity = new Identity(null);
+  const { isValid } = await identity.validateEvmWalletSignature({
+    walletAddress: body.address,
+    signature: body.signature,
+    signatureValidityMinutes: 10,
+    message: `test\n${body.timestamp}`,
+    timestamp: body.timestamp,
+  });
+
+  if (!isValid) {
+    throw new ResourceError(RouteErrorCode.SIGNATURE_NOT_PRESENT);
+  }
+  const wallet = body.address;
 
   if (!body.jwt) {
     throw new ResourceError(RouteErrorCode.REQUEST_TOKEN_NOT_PRESENT);
   }
+
   const email = readEmailAirdropToken(body.jwt);
   if (!email) {
     throw new ResourceError(RouteErrorCode.REQUEST_TOKEN_INVALID);
@@ -55,6 +65,7 @@ export async function resolve(req: Request, res: Response): Promise<void> {
   const collection = new Nft({
     key: env.APILLON_KEY,
     secret: env.APILLON_SECRET,
+    logLevel: LogLevel.VERBOSE,
   }).collection(env.COLLECTION_UUID);
 
   try {
@@ -63,7 +74,13 @@ export async function resolve(req: Request, res: Response): Promise<void> {
       ? AirdropStatus.AIRDROP_COMPLETED
       : AirdropStatus.AIRDROP_ERROR;
   } catch (e) {
-    writeLog(LogType.ERROR, e, "claim-airdrop.ts", "resolve");
+    writeLog(
+      LogType.ERROR,
+      "Error creating airdrop",
+      "claim-airdrop.ts",
+      "resolve",
+      e
+    );
     user.airdrop_status = AirdropStatus.AIRDROP_ERROR;
   }
 

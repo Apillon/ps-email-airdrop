@@ -1,13 +1,7 @@
 import { Application } from "express";
 import { NextFunction, Request, Response } from "../http";
-import {
-  DefaultUserRoles,
-  PopulateStrategy,
-  RouteErrorCode,
-  SerializedStrategy,
-} from "../config/values";
+import { RouteErrorCode, SerializedStrategy } from "../config/values";
 import { AuthenticateAdmin } from "../middlewares/authentication";
-import { BatchUsers } from "../models/batch-users";
 import { ResourceError, ValidationError } from "../lib/errors";
 import { User } from "../models/user";
 

@@ -165,6 +165,29 @@ export class User extends BaseSqlModel {
   }
 
   /**
+   * returns airdrop user statistics.
+   */
+  public async getStatistics() {
+    const data = await this.db().paramQuery(
+      `
+      SELECT 
+      count(*) as total,
+        SUM(IF(airdrop_status = 1, 1, 0)) as pending,
+        SUM(IF(airdrop_status in (2,4,5,6,7), 1, 0)) as emailSent,
+        SUM(IF(airdrop_status in (4,5,6,7), 1, 0)) as walletLinked,
+        SUM(IF(airdrop_status = 6, 1, 0)) as airdropped,
+        SUM(IF(airdrop_status in (3, 7), 1, 0)) as threwError
+    FROM user;
+    `
+    );
+    if (data && data.length) {
+      return data[0];
+    } else {
+      throw new Error();
+    }
+  }
+
+  /**
    * returns list of matched users
    * @param urlQuery search/paging/order parameters
    */
@@ -193,13 +216,14 @@ export class User extends BaseSqlModel {
     }
 
     let serializedStrategy = SerializedStrategy.ADMIN;
-
     const sqlQuery = {
       qSelect: `
         SELECT
           u.id, u.email,
           u.tx_hash, u.status,
-          u.createTime, u.updateTime
+          u.createTime, u.updateTime,
+          u.airdrop_status, u.email_start_send_time,
+          u.email_sent_time, u.wallet
         `,
       qFrom: `
         FROM user u

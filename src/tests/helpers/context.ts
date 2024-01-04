@@ -9,22 +9,30 @@ export interface Stage {
   app: express.Application;
 }
 
-export async function createContextAndStartServer(): Promise<Stage> {
-  env.APP_ENV = "testing";
-  const mysql = new MySql(env);
-  const api = new HttpServer({ env, mysql });
+export async function createContextAndStartServer(
+  overrideEnv?: any
+): Promise<Stage> {
+  let useEnv = env;
+  if (overrideEnv) {
+    useEnv = { ...env, ...overrideEnv };
+  }
+  useEnv.APP_ENV = "testing";
+  const mysql = new MySql(useEnv);
+  const api = new HttpServer({ env: useEnv, mysql });
   try {
     await mysql.connect();
     await api.listen();
-    console.log(`Running server on ${env.API_HOST}:${env.API_PORT}`);
+    console.log(`Running server on ${useEnv.API_HOST}:${useEnv.API_PORT}`);
 
     // ensure running tests on test database
     // const databaseName = await mysql.paramQuery('SELECT DATABASE() as DB').then(res => res[0].DB);
     // tslint:disable-next-line: comment-type
     if (
-      env.APP_ENV !== "testing" ||
-      !env.MYSQL_DB_TEST ||
-      !env.MYSQL_DB_TEST.endsWith("test") /*|| !databaseName.endsWith('test')*/
+      useEnv.APP_ENV !== "testing" ||
+      !useEnv.MYSQL_DB_TEST ||
+      !useEnv.MYSQL_DB_TEST.endsWith(
+        "test"
+      ) /*|| !databaseName.endsWith('test')*/
     ) {
       console.error(
         "NOT ON TESTING DATABASE, EXITING (if you are sure, comment this check out)"
@@ -38,7 +46,7 @@ export async function createContextAndStartServer(): Promise<Stage> {
     process.exit(1);
   }
 
-  return { context: new Context(env, mysql), server: api, app: api.app };
+  return { context: new Context(useEnv, mysql), server: api, app: api.app };
 }
 
 export async function stopServerAndCloseMySqlContext(stage: Stage) {

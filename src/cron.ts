@@ -59,7 +59,7 @@ export class Cron {
             [users[i].email],
             'Claim your NFT',
             'en-airdrop-claim',
-            { link: `${env.APP_URL}?token=${token}` }
+            { link: `${env.APP_URL}/claim?token=${token}` }
           );
           updates.push(
             `(${users[i].id}, '${users[i].email}', ${
