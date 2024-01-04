@@ -19,7 +19,7 @@ export async function resolve(req: Request, res: Response): Promise<void> {
   const { context, body } = req;
 
   if (!body.signature) {
-    // throw error
+    throw new ResourceError(RouteErrorCode.SIGNATURE_NOT_PRESENT);
   }
 
   const identity = new Identity(null);
