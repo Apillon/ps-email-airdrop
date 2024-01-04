@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airdrop-db
+spec:
+  selector:
+    matchLabels:
+      app: airdrop-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: airdrop-db
+    spec:
+      containers:
+        - name: mysql
+          image: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value:
+            - name: MYSQL_DATABASE
+              value: 'airdrop'
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc

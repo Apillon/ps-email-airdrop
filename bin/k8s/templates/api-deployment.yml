@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airdrop-api
+spec:
+  selector:
+    matchLabels:
+      app: airdrop-api
+  template:
+    metadata:
+      labels:
+        app: airdrop-api
+    spec:
+      containers:
+        - name: airdrop-api
+          image: itkalmiadev/ps-email-airdrop:beta
+          env:
+            - name: APP_URL
+              value: 'http://your-custom-url:3001'
+            - name: ADMIN_WALLET
+              value:
+            - name: APILLON_KEY
+              value:
+            - name: APILLON_SECRET
+              value:
+            - name: COLLECTION_UUID
+              value:
+            - name: SMTP_HOST
+              value: 'smtp.gmail.com'
+            - name: SMTP_PORT
+              value: '465'
+            - name: SMTP_USERNAME
+              value:
+            - name: SMTP_PASSWORD
+              value:
+            - name: SMTP_EMAIL_FROM
+              value:
+            - name: SMTP_NAME_FROM
+              value: 'Apillon airdrop test'
+            - name: API_HOST
+              value: '0.0.0.0'
+            - name: API_PORT
+              value: '3000'
+
+          ports:
+            - containerPort: 3000

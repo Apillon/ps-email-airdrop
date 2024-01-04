@@ -1,19 +1,19 @@
-import { CronJob } from "cron";
-import { AirdropStatus } from "./models/user";
-import { dateToSqlString } from "./lib/sql-utils";
-import { SqlModelStatus } from "./models/base-sql-model";
-import { MysqlConnectionManager } from "./lib/mysql-connection-manager";
-import { SmtpSendTemplate } from "./lib/node-mailer";
-import { env } from "./config/env";
-import { generateEmailAirdropToken } from "./lib/jwt";
-import { LogType, writeLog } from "./lib/logger";
+import { CronJob } from 'cron';
+import { AirdropStatus } from './models/user';
+import { dateToSqlString } from './lib/sql-utils';
+import { SqlModelStatus } from './models/base-sql-model';
+import { MysqlConnectionManager } from './lib/mysql-connection-manager';
+import { SmtpSendTemplate } from './lib/node-mailer';
+import { env } from './config/env';
+import { generateEmailAirdropToken } from './lib/jwt';
+import { LogType, writeLog } from './lib/logger';
 
 export class Cron {
   private cronJobs: CronJob[] = [];
 
   constructor() {
-    this.cronJobs.push(new CronJob("* * * * *", this.sendEmail, null, false));
-    this.cronJobs.push(new CronJob("* * * * *", this.airdrop, null, false));
+    this.cronJobs.push(new CronJob('* * * * *', this.sendEmail, null, false));
+    this.cronJobs.push(new CronJob('* * * * *', this.airdrop, null, false));
   }
 
   async start() {
@@ -46,6 +46,10 @@ export class Cron {
       );
       const users = res[0] as Array<any>;
 
+      if (!users.length) {
+        console.log('No pending users for sending emails!');
+        return;
+      }
       const updates = [];
 
       for (let i = 0; i < users.length; i++) {
@@ -53,8 +57,8 @@ export class Cron {
           const token = await generateEmailAirdropToken(users[i].email);
           await SmtpSendTemplate(
             [users[i].email],
-            "Claim your NFT",
-            "en-airdrop-claim",
+            'Claim your NFT',
+            'en-airdrop-claim',
             { link: `${env.APP_URL}?token=${token}` }
           );
           updates.push(
@@ -63,7 +67,7 @@ export class Cron {
             }, '${dateToSqlString(new Date())}')`
           );
         } catch (e) {
-          writeLog(LogType.ERROR, e, "cron.ts", "sendEmail");
+          writeLog(LogType.ERROR, e, 'cron.ts', 'sendEmail');
           updates.push(
             `(${users[i].id}, '${users[i].email}', ${
               AirdropStatus.EMAIL_ERROR
@@ -74,7 +78,7 @@ export class Cron {
 
       const sql = `
         INSERT INTO user (id, email, airdrop_status, email_sent_time)
-        VALUES ${updates.join(",")}
+        VALUES ${updates.join(',')}
         ON DUPLICATE KEY UPDATE
         airdrop_status = VALUES(airdrop_status),
         email_sent_time = VALUES(email_sent_time)`;
@@ -82,12 +86,12 @@ export class Cron {
       await conn.execute(sql);
       await conn.commit();
     } catch (e) {
-      writeLog(LogType.ERROR, e, "cron.ts", "sendEmail");
+      writeLog(LogType.ERROR, e, 'cron.ts', 'sendEmail');
       await conn.rollback();
     }
   }
 
   private async airdrop() {
-    console.log("test");
+    console.log('test');
   }
 }
