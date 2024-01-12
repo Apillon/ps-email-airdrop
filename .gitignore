@@ -78,3 +78,10 @@ bin/deploy/env.staging.yml
 .serverless/*
 .serverless
 .webpack
+
+# Nuxt dev/build outputs
+.output
+.nuxt
+.nitro
+.cache
+dist

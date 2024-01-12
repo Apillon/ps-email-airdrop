@@ -1,0 +1,10 @@
+/* New Spirit */
+@font-face {
+  font-family: 'New Spirit';
+  src:
+    url('./new-spirit-font/new_spirit_medium.woff2') format('woff2'),
+    url('./new-spirit-font/new_spirit_medium.woff') format('woff');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
