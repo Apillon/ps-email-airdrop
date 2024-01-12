@@ -57,6 +57,10 @@ export async function resolve(req: Request, res: Response): Promise<void> {
     throw new ResourceError(RouteErrorCode.USER_DOES_NOT_EXIST);
   }
 
+  if (user.airdrop_status != AirdropStatus.PENDING) {
+    throw new ResourceError(RouteErrorCode.AIRDROP_ALREADY_CLAIMED);
+  }
+
   user.airdrop_status = AirdropStatus.WALLET_LINKED;
   user.wallet = wallet;
 
