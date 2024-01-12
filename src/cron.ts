@@ -13,7 +13,6 @@ export class Cron {
 
   constructor() {
     this.cronJobs.push(new CronJob("* * * * *", this.sendEmail, null, false));
-    this.cronJobs.push(new CronJob("* * * * *", this.airdrop, null, false));
   }
 
   async start() {
@@ -72,22 +71,20 @@ export class Cron {
         }
       }
 
-      const sql = `
+      if (updates && updates.length > 0) {
+        const sql = `
         INSERT INTO user (id, email, airdrop_status, email_sent_time)
         VALUES ${updates.join(",")}
         ON DUPLICATE KEY UPDATE
         airdrop_status = VALUES(airdrop_status),
         email_sent_time = VALUES(email_sent_time)`;
 
-      await conn.execute(sql);
+        await conn.execute(sql);
+      }
       await conn.commit();
     } catch (e) {
       writeLog(LogType.ERROR, e, "cron.ts", "sendEmail");
       await conn.rollback();
     }
-  }
-
-  private async airdrop() {
-    console.log("test");
   }
 }
