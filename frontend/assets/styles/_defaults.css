@@ -11,7 +11,7 @@ body,
 
 body {
   @apply text-white font-normal;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 h1,

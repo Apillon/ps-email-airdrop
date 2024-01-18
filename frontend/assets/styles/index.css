@@ -4,18 +4,8 @@
 @import 'tailwindcss/utilities';
 
 @import './_fonts.css';
-@import './_typography.css';
-@import './_naive-ui';
 @import './_defaults.css';
+@import './_naive-ui';
+@import './_typography.css';
 @import './_overwrites.css';
 @import './_transitions.css';
-
-#kalm .nuxt-icon {
-  svg {
-    margin-bottom: 0;
-  }
-}
-
-.page-container {
-  @apply mx-auto w-[1408px] max-w-full px-4;
-}

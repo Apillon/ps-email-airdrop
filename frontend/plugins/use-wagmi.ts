@@ -2,22 +2,31 @@ import { UseWagmiPlugin, createConfig } from 'use-wagmi';
 import { moonbaseAlpha } from 'use-wagmi/chains';
 import { MetaMaskConnector } from 'use-wagmi/connectors/metaMask';
 import { CoinbaseWalletConnector } from 'use-wagmi/connectors/coinbaseWallet';
+import { WalletConnectConnector } from 'use-wagmi/connectors/walletConnect';
 import { createPublicClient, http } from 'viem';
 
 export default defineNuxtPlugin(nuxtApp => {
+  const chains = [moonbaseAlpha];
   const config = createConfig({
     autoConnect: true,
     connectors: [
       new MetaMaskConnector({
-        moonbaseAlpha,
+        chains,
         options: {
           UNSTABLE_shimOnConnectSelectAccount: true,
         },
       }),
       new CoinbaseWalletConnector({
-        moonbaseAlpha,
+        chains,
         options: {
           appName: 'Email test',
+        },
+      }),
+      new WalletConnectConnector({
+        chains,
+        options: {
+          projectId: 'fefd3005e5f3b8fd2e73de5333eeccf9',
+          qrcode: true,
         },
       }),
       // new InjectedConnector({

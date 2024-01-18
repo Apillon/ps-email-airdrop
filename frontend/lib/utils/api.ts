@@ -7,7 +7,7 @@ class Api {
       'Content-Type': 'application/json',
     }),
     basePath: '',
-    publicPath: '', // Aradena public api
+    publicPath: '',
   };
 
   async post<T>(path: string, data?: any, isPublic = false, requestOptions?: RequestInit) {

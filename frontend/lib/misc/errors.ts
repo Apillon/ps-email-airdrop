@@ -56,6 +56,16 @@ export function getErrorMsg(code = 500001, defaultMessage = '') {
  * Define message for each error
  */
 export const ErrorCodes = {
+  // RouteErrorCode
+  400000: 'INVALID_REQUEST',
+  400001: 'PROFILE_NOT_IDENTIFIED',
+  400002: 'PROFILE_CREDENTIALS_INVALID',
+  400003: 'REQUEST_TOKEN_INVALID',
+  400004: 'User does not exists, please login with different wallet',
+  400005: 'Missing signature',
+  400006: 'Token does not exists',
+  400007: 'NFT already claimed',
+
   // SystemErrorCode
   500000: 'DEFAULT_SYSTEM_ERROR',
   500001: 'There was an error with your request. Please try again later.',

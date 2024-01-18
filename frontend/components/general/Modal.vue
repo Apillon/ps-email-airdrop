@@ -11,18 +11,20 @@ interface Props extends /* @vue-ignore */ ModalProps {
 }
 
 const props = defineProps<Props>();
+const emits = defineEmits(['close']);
 </script>
 
 <template>
   <n-modal
-    class="min-w-full max-w-full rounded-3xl border-2 border-solid border-tq bg-white xs:min-w-[400px] sm:min-w-[487px]"
+    v-bind="$attrs"
+    class="min-w-full max-w-full border border-solid border-tq bg-bg xs:min-w-[400px] sm:min-w-[487px]"
   >
     <div class="relative" :class="innerClass || 'px-3 py-6 sm:p-10'">
       <!-- Close Button -->
       <!-- eslint-disable vue/require-explicit-emits -->
       <button
         class="absolute right-3 top-2 z-10 block !p-0.5 text-tq hover:text-tq-hover sm:right-5 sm:top-5"
-        @click="$emit('update:show', false)"
+        @click="$emit('close', false)"
       >
         <NuxtIcon name="close" class="text-[18px]" />
       </button>

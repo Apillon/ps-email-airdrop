@@ -44,13 +44,6 @@
     }
   }
 
-  /** Size small */
-  &--small-type {
-    .n-button__content {
-      @apply font-normal;
-    }
-  }
-
   /** Fixes */
   .n-base-wave {
     display: none;
@@ -62,7 +55,17 @@
 
 /** Container */
 .container {
-  @apply md:px-8;
+  @apply md:px-20;
+}
+
+/** Date picker */
+.n-date-panel {
+  .n-button {
+    .n-button__border,
+    .n-button__state-border {
+      display: none;
+    }
+  }
 }
 
 /** Dropdown */
@@ -130,10 +133,13 @@
     }
   }
 }
-.nuxt-icon {
+#kalm .nuxt-icon {
   &.icon-auto svg {
     width: auto;
     height: auto;
+  }
+  svg {
+    margin-bottom: 0;
   }
 }
 
@@ -176,6 +182,10 @@
     > .n-layout-scroll-container > .n-layout-content > .n-layout-scroll-container > .n-scrollbar {
       @apply pb-3 -mb-3;
     }
+  }
+
+  &.h-screen > .n-scrollbar > .n-scrollbar-container > .n-scrollbar-content {
+    @apply min-h-full;
   }
 }
 .n-layout-sider {
@@ -276,6 +286,30 @@ body > .n-message-container {
   }
 }
 
+/** Pagination */
+.n-pagination {
+  @apply items-center;
+
+  .n-base-selection .n-base-suffix {
+    @apply right-2;
+  }
+}
+
+/** Popover */
+.n-popover {
+  @apply max-w-md;
+
+  &__content {
+    @apply body-sm text-white;
+  }
+  &.n-popover-shared.n-popover-shared--show-arrow {
+    @apply max-w-md;
+  }
+}
+[v-placement='top'] > .n-popover-shared > .n-popover-arrow-wrapper {
+  margin-top: -1px;
+}
+
 /** Select */
 .n-select {
   &.select-role {
@@ -300,7 +334,7 @@ body > .n-message-container {
 
 /** Tag */
 .n-tag {
-  font-weight: bold;
+  @apply uppercase font-bold;
 }
 
 /** Upload file */

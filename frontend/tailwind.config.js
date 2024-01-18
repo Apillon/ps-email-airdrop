@@ -59,7 +59,7 @@ module.exports = {
     container: {
       center: true,
       screens: {
-        lx: '1320px',
+        lx: '1440px',
       },
       padding: {
         DEFAULT: '1rem',

@@ -1,127 +1,159 @@
 <script lang="ts" setup>
-import { useAccount, useConnect, useWalletClient } from 'use-wagmi';
-const items = ref(null);
-const { vueApp } = useNuxtApp();
-const { data: walletClient, refetch } = useWalletClient();
-const { isConnected } = useAccount();
-const $papa = vueApp.config.globalProperties.$papa;
-
-let jwt: any = null;
-
-const { connect, connectors } = useConnect({
-  onSuccess() {
-    console.log('connected');
-  },
-});
+import UploadSVG from '~/assets/images/upload.svg';
+import { useAccount } from 'use-wagmi';
+import { AirdropStatus } from '~/lib/values/general.values';
 
 useHead({
   title: 'Apillon email airdrop prebuilt solution',
-  titleTemplate: '',
 });
 
+const message = useMessage();
+const userStore = useUserStore();
+const { isConnected } = useAccount();
+const { handleError } = useErrors();
+
+const items = ref<UserInterface[]>([]);
+const statistics = ref<StatisticsInterface | null>(null);
+const modalUploadCsvVisible = ref<boolean>(false);
+
+const isLoggedIn = computed(() => isConnected.value && userStore.jwt);
+const selectedRecipients = computed(() => items.value.length);
+
+onMounted(async () => {
+  if (isLoggedIn.value) {
+    await getUsers();
+    await getStatistics();
+  }
+});
+
+watch(
+  () => isLoggedIn.value,
+  async _ => {
+    if (isLoggedIn.value) {
+      await getUsers();
+      await getStatistics();
+    }
+  }
+);
+
+function onFileUploaded(csvData: CsvItem[]) {
+  modalUploadCsvVisible.value = false;
+
+  const data: UserInterface[] = csvData.map(item => {
+    return {
+      airdrop_status: AirdropStatus.PENDING,
+      email: item.email,
+      email_sent_time: null,
+      email_start_send_time: item.email_start_send_time,
+      wallet: null,
+    } as UserInterface;
+  });
+
+  if (!Array.isArray(items.value) || items.value.length === 0) {
+    items.value = data;
+  } else {
+    data.forEach(item => {
+      if (emailAlreadyExists(item.email)) {
+        message.warning(`Email: ${item.email} is already on the list`);
+      } else {
+        items.value.unshift(item as UserInterface);
+      }
+    });
+  }
+}
+
+function emailAlreadyExists(email: string) {
+  return items.value.some(item => item.email === email);
+}
+
 async function getUsers() {
-  const res = await $api.get('/users');
+  const res = await $api.get<UsersResponse>('/users', { itemsPerPage: 10000 });
   items.value = res.data.items;
 }
 
-onMounted(async () => {
-  if (jwt) {
-    await getUsers();
-  }
-});
-
-function uploadFileRequest({ file, onError, onFinish }: NUploadCustomRequestOptions) {
-  if (file.type !== 'text/csv' && file.type !== 'application/vnd.ms-excel') {
-    console.warn(file.type);
-    // message.warning($i18n.t('validation.fileTypeNotCsv'));
-
-    /** Mark file as failed */
-    onError();
-    return;
-  }
-  parseUploadedFile(file.file);
+async function getStatistics() {
+  const res = await $api.get<StatisticsResponse>('/users/statistics');
+  statistics.value = res.data;
 }
 
-function parseUploadedFile(file?: File | null) {
-  if (!file) {
-    return;
-  }
-  console.log(file);
-
-  $papa.parse(file, {
-    header: false,
-    skipEmptyLines: true,
-    complete: async (results: CsvFileData) => {
-      if (results.data.length) {
-        const users = [];
-        for (const r of results.data) {
-          users.push({ email: r[0] });
-        }
-        await $api.post('/users', { users });
-        await getUsers();
-      } else {
-        alert('empty csv');
-      }
-    },
-    error: function (error: string) {
-      console.log(error);
-      alert('error reading csv');
-    },
+function addRecipient() {
+  items.value.push({
+    airdrop_status: AirdropStatus.PENDING,
+    email: '',
+    email_sent_time: null,
+    email_start_send_time: null,
+    wallet: null,
   });
 }
 
-async function login() {
-  if (!isConnected.value) {
-    await connect({ connector: connectors.value[0] });
-  } else {
-    await refetch();
-    if (!walletClient.value) {
-      alert('walletNotConnected');
-      return;
-    }
-    console.log(walletClient.value);
-    const timestamp = new Date().getTime();
-    const message = 'test';
+function onUserRemove(email: string) {
+  items.value = items.value.filter(item => item.email !== email);
+}
+function onUserAdded(user: UserInterface) {
+  items.value.push(JSON.parse(JSON.stringify(user)));
+}
 
-    const signature = await walletClient.value.signMessage({ message: `${message}\n${timestamp}` });
-    const res = await $api.post('/login', {
-      signature,
-      timestamp,
-    });
-    jwt = res.data.jwt;
-    if (jwt) {
-      $api.setToken(jwt);
-      await getUsers();
-    }
+async function proceed() {
+  const uploadItems = items.value.filter(item => !item.id && item.email);
+
+  if (!userStore.jwt) {
+    message.warning('Please login first to proceed with this action');
+    return;
+  } else if (!uploadItems || uploadItems.length === 0) {
+    message.warning('Upload CSV file and add some recipients first.');
+    return;
+  }
+
+  try {
+    await $api.post('/users', { users: uploadItems });
+    await getUsers();
+    await getStatistics();
+
+    message.success('Recipients are successfully added.');
+  } catch (e) {
+    handleError(e);
   }
 }
 </script>
 
 <template>
-  <div class="grid">
-    <div class="text-lg">Email airdrop</div>
+  <div>
+    <div class="w-full my-12 mx-auto">
+      <h3 class="my-8">NFT Collection Stock</h3>
 
-    <Btn v-if="!isConnected" @click="connect({ connector: connectors[0] })">Connect wallet</Btn>
-    <Btn v-if="isConnected && !items" type="primary" @click="login()">Login</Btn>
-    <div v-if="isConnected && items">
-      <br />
-      <n-upload
-        :show-file-list="false"
-        accept=".csv, application/vnd.ms-excel"
-        :custom-request="uploadFileRequest"
-      >
-        <Btn type="secondary"> Choose File </Btn>
-      </n-upload>
-      <Btn type="primary" @click="modalMetadataAttributesVisible = true"> Confirm </Btn>
-      <br />
-      <div class="grid grid-cols-4 gap-4 font-bold">
-        <div>Email:</div>
-        <div>Status:</div>
-      </div>
-      <div v-for="(item, index) in items" :key="index" class="grid grid-cols-4 gap-4">
-        <div>{{ item.email }}</div>
-        <div>{{ item.airdrop_status }}</div>
-      </div>
+      <Statistics v-if="statistics" :statistics="statistics" />
+      <TableUsers v-if="items" :users="items" @add-user="onUserAdded" @remove-user="onUserRemove" />
+
+      <n-space class="w-full my-8" size="large" align="center" justify="space-between">
+        <n-space size="large">
+          <Btn @click="modalUploadCsvVisible = true"> Upload CSV </Btn>
+          <Btn type="secondary" @click="addRecipient"> Add recipient </Btn>
+        </n-space>
+
+        <div v-if="items && items.length" class="flex gap-4 items-center">
+          <p>Price ≈ {{ selectedRecipients * 100 }} credits</p>
+          <Btn :disabled="!items || items.length === 0" @click="proceed()">Proceed</Btn>
+        </div>
+      </n-space>
     </div>
+
+    <modal
+      :show="modalUploadCsvVisible"
+      @close="() => (modalUploadCsvVisible = false)"
+      @update:show="modalUploadCsvVisible = false"
+    >
+      <div class="max-w-md w-full md:px-6 my-12 mx-auto">
+        <div class="mb-5 text-center">
+          <img :src="UploadSVG" class="mx-auto" width="203" height="240" alt="airdrop" />
+          <h3 class="my-8 text-center">Upload your CSV file with recipients’ addresses</h3>
+          <p class="text-center">
+            Select and upload the CSV file containing addresses to which you wish to distribute
+            NFTs.
+          </p>
+          <Btn type="builders" size="tiny" href="/files/example.csv"> Download CSV sample </Btn>
+        </div>
+        <FormUpload @close="modalUploadCsvVisible = false" @proceed="onFileUploaded" />
+      </div>
+    </modal>
   </div>
 </template>
