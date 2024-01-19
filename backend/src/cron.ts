@@ -1,18 +1,18 @@
-import { CronJob } from "cron";
-import { AirdropStatus } from "./models/user";
-import { dateToSqlString } from "./lib/sql-utils";
-import { SqlModelStatus } from "./models/base-sql-model";
-import { MysqlConnectionManager } from "./lib/mysql-connection-manager";
-import { SmtpSendTemplate } from "./lib/node-mailer";
-import { env } from "./config/env";
-import { generateEmailAirdropToken } from "./lib/jwt";
-import { LogType, writeLog } from "./lib/logger";
+import { CronJob } from 'cron';
+import { AirdropStatus } from './models/user';
+import { dateToSqlString } from './lib/sql-utils';
+import { SqlModelStatus } from './models/base-sql-model';
+import { MysqlConnectionManager } from './lib/mysql-connection-manager';
+import { SmtpSendTemplate } from './lib/node-mailer';
+import { env } from './config/env';
+import { generateEmailAirdropToken } from './lib/jwt';
+import { LogType, writeLog } from './lib/logger';
 
 export class Cron {
   private cronJobs: CronJob[] = [];
 
   constructor() {
-    this.cronJobs.push(new CronJob("* * * * *", this.sendEmail, null, false));
+    this.cronJobs.push(new CronJob('* * * * *', this.sendEmail, null, false));
   }
 
   async start() {
@@ -50,23 +50,20 @@ export class Cron {
       for (let i = 0; i < users.length; i++) {
         try {
           const token = await generateEmailAirdropToken(users[i].email);
-          await SmtpSendTemplate(
-            [users[i].email],
-            "Claim your NFT",
-            "en-airdrop-claim",
-            { link: `${env.APP_URL}/claim?token=${token}` }
-          );
+          await SmtpSendTemplate([users[i].email], 'Claim your NFT', 'en-airdrop-claim', {
+            link: `${env.APP_URL}/claim?token=${token}`,
+          });
           updates.push(
-            `(${users[i].id}, '${users[i].email}', ${
-              AirdropStatus.EMAIL_SENT
-            }, '${dateToSqlString(new Date())}')`
+            `(${users[i].id}, '${users[i].email}', ${AirdropStatus.EMAIL_SENT}, '${dateToSqlString(
+              new Date()
+            )}')`
           );
         } catch (e) {
-          writeLog(LogType.ERROR, e, "cron.ts", "sendEmail");
+          writeLog(LogType.ERROR, e, 'cron.ts', 'sendEmail');
           updates.push(
-            `(${users[i].id}, '${users[i].email}', ${
-              AirdropStatus.EMAIL_ERROR
-            }, '${dateToSqlString(new Date())}')`
+            `(${users[i].id}, '${users[i].email}', ${AirdropStatus.EMAIL_ERROR}, '${dateToSqlString(
+              new Date()
+            )}')`
           );
         }
       }
@@ -74,7 +71,7 @@ export class Cron {
       if (updates && updates.length > 0) {
         const sql = `
         INSERT INTO user (id, email, airdrop_status, email_sent_time)
-        VALUES ${updates.join(",")}
+        VALUES ${updates.join(',')}
         ON DUPLICATE KEY UPDATE
         airdrop_status = VALUES(airdrop_status),
         email_sent_time = VALUES(email_sent_time)`;
@@ -83,8 +80,9 @@ export class Cron {
       }
       await conn.commit();
     } catch (e) {
-      writeLog(LogType.ERROR, e, "cron.ts", "sendEmail");
+      writeLog(LogType.ERROR, e, 'cron.ts', 'sendEmail');
       await conn.rollback();
     }
+    await mysql.close();
   }
 }
