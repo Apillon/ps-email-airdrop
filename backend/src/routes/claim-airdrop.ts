@@ -1,24 +1,21 @@
-import { Application } from "express";
-import { NextFunction, Request, Response } from "../http";
-import { RouteErrorCode } from "../config/values";
-import { ResourceError } from "../lib/errors";
-import { readEmailAirdropToken } from "../lib/jwt";
-import { AirdropStatus, User } from "../models/user";
-import { Identity, LogLevel, Nft } from "@apillon/sdk";
-import { LogType, writeLog } from "../lib/logger";
-import { env } from "../config/env";
+import { Application } from 'express';
+import { NextFunction, Request, Response } from '../http';
+import { RouteErrorCode } from '../config/values';
+import { ResourceError } from '../lib/errors';
+import { readEmailAirdropToken } from '../lib/jwt';
+import { AirdropStatus, User } from '../models/user';
+import { Identity, LogLevel, Nft } from '@apillon/sdk';
+import { LogType, writeLog } from '../lib/logger';
+import { env } from '../config/env';
 
 /**∂
  * Installs new route on the provided application.
  * @param app ExpressJS application.
  */
 export function inject(app: Application) {
-  app.post(
-    "/users/claim",
-    (req: Request, res: Response, next: NextFunction) => {
-      resolve(req, res).catch(next);
-    }
-  );
+  app.post('/users/claim', (req: Request, res: Response, next: NextFunction) => {
+    resolve(req, res).catch(next);
+  });
 }
 
 export async function resolve(req: Request, res: Response): Promise<void> {
@@ -57,7 +54,14 @@ export async function resolve(req: Request, res: Response): Promise<void> {
     throw new ResourceError(RouteErrorCode.USER_DOES_NOT_EXIST);
   }
 
-  if (user.airdrop_status != AirdropStatus.PENDING) {
+  if (
+    ![
+      AirdropStatus.PENDING,
+      AirdropStatus.EMAIL_SENT,
+      AirdropStatus.WALLET_LINKED,
+      AirdropStatus.EMAIL_ERROR,
+    ].includes(user.airdrop_status)
+  ) {
     throw new ResourceError(RouteErrorCode.AIRDROP_ALREADY_CLAIMED);
   }
 
@@ -78,16 +82,10 @@ export async function resolve(req: Request, res: Response): Promise<void> {
       ? AirdropStatus.AIRDROP_COMPLETED
       : AirdropStatus.AIRDROP_ERROR;
   } catch (e) {
-    writeLog(
-      LogType.ERROR,
-      "Error creating airdrop",
-      "claim-airdrop.ts",
-      "resolve",
-      e
-    );
+    writeLog(LogType.ERROR, 'Error creating airdrop', 'claim-airdrop.ts', 'resolve', e);
     user.airdrop_status = AirdropStatus.AIRDROP_ERROR;
   }
 
   await user.update();
-  return res.respond(200, { success: "ok" });
+  return res.respond(200, { success: 'ok' });
 }
