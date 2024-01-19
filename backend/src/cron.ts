@@ -83,6 +83,6 @@ export class Cron {
       writeLog(LogType.ERROR, e, 'cron.ts', 'sendEmail');
       await conn.rollback();
     }
-    await mysql.close();
+    MysqlConnectionManager.destroyInstance();
   }
 }
