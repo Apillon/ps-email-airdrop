@@ -12,6 +12,7 @@ const userStore = useUserStore();
 const { isConnected } = useAccount();
 const { handleError } = useErrors();
 
+let recipientInterval: any = null;
 const items = ref<UserInterface[]>([]);
 const statistics = ref<StatisticsInterface | null>(null);
 const modalUploadCsvVisible = ref<boolean>(false);
@@ -69,6 +70,9 @@ function emailAlreadyExists(email: string) {
 async function getUsers() {
   const res = await $api.get<UsersResponse>('/users', { itemsPerPage: 10000 });
   items.value = res.data.items;
+
+  /** Users pooling */
+  checkUnfinishedRecipients();
 }
 
 async function getStatistics() {
@@ -114,12 +118,31 @@ async function proceed() {
     handleError(e);
   }
 }
+
+/** Recipients polling */
+function checkUnfinishedRecipients() {
+  const unfinishedRecipient = items.value.find(
+    item => item.airdrop_status === AirdropStatus.PENDING
+  );
+  if (unfinishedRecipient === undefined) {
+    return;
+  }
+
+  clearInterval(recipientInterval);
+  recipientInterval = setInterval(async () => {
+    await getUsers();
+    const recipient = items.value.find(item => item.airdrop_status === AirdropStatus.PENDING);
+    if (!recipient || recipient.airdrop_status >= AirdropStatus.EMAIL_SENT) {
+      clearInterval(recipientInterval);
+    }
+  }, 3000);
+}
 </script>
 
 <template>
   <div>
     <div class="w-full my-12 mx-auto">
-      <h3 class="my-8">NFT Collection Stock</h3>
+      <h3 class="my-8">NFT Recipient Stock</h3>
 
       <Statistics v-if="statistics" :statistics="statistics" />
       <TableUsers v-if="items" :users="items" @add-user="onUserAdded" @remove-user="onUserRemove" />
@@ -132,7 +155,7 @@ async function proceed() {
 
         <div v-if="items && items.length" class="flex gap-4 items-center">
           <p>Price ≈ {{ selectedRecipients * 100 }} credits</p>
-          <Btn :disabled="!items || items.length === 0" @click="proceed()">Proceed</Btn>
+          <Btn :disabled="!items || items.length === 0" @click="proceed()"> Save recipients </Btn>
         </div>
       </n-space>
     </div>
