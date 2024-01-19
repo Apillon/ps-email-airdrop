@@ -1,16 +1,16 @@
-import { Application } from "express";
-import { NextFunction, Request, Response } from "../http";
-import { RouteErrorCode } from "../config/values";
-import { ResourceError } from "../lib/errors";
-import { Identity } from "@apillon/sdk";
-import { generateAdminAuthToken } from "../lib/jwt";
+import { Application } from 'express';
+import { NextFunction, Request, Response } from '../http';
+import { RouteErrorCode } from '../config/values';
+import { ResourceError } from '../lib/errors';
+import { Identity } from '@apillon/sdk';
+import { generateAdminAuthToken } from '../lib/jwt';
 
 /**
  * Installs new route on the provided application.
  * @param app ExpressJS application.
  */
 export function inject(app: Application) {
-  app.post("/login", (req: Request, res: Response, next: NextFunction) => {
+  app.post('/login', (req: Request, res: Response, next: NextFunction) => {
     resolve(req, res).catch(next);
   });
 }
@@ -24,8 +24,12 @@ export async function resolve(req: Request, res: Response): Promise<void> {
 
   const identity = new Identity(null);
 
+  if (!context.env.ADMIN_WALLET.includes(body.address?.toLowerCase())) {
+    throw new ResourceError(RouteErrorCode.INVALID_ADMIN, context);
+  }
+
   const { isValid } = await identity.validateEvmWalletSignature({
-    walletAddress: context.env.ADMIN_WALLET,
+    walletAddress: body.address,
     signature: body.signature,
     signatureValidityMinutes: 10,
     message: `test\n${body.timestamp}`,
@@ -33,9 +37,9 @@ export async function resolve(req: Request, res: Response): Promise<void> {
   });
 
   if (isValid) {
-    const jwt = generateAdminAuthToken(context.env.ADMIN_WALLET);
+    const jwt = generateAdminAuthToken(body.address);
     return res.respond(200, { jwt });
   } else {
-    throw new ResourceError(RouteErrorCode.USER_DOES_NOT_EXIST, context);
+    throw new ResourceError(RouteErrorCode.INVALID_SIGNATURE, context);
   }
 }
