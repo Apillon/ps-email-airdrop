@@ -27,6 +27,10 @@ onMounted(async () => {
   }
 });
 
+onUnmounted(() => {
+  clearInterval(recipientInterval);
+});
+
 watch(
   () => isLoggedIn.value,
   async _ => {
@@ -69,7 +73,24 @@ function emailAlreadyExists(email: string) {
 
 async function getUsers() {
   const res = await $api.get<UsersResponse>('/users', { itemsPerPage: 10000 });
-  items.value = res.data.items;
+  if (items.value.length === 0 || items.value.length === res.data.items.length) {
+    items.value = res.data.items;
+  } else {
+    res.data.items.forEach(item => {
+      const recipient = items.value.find(r => r.email === item.email);
+      if (recipient) {
+        recipient.airdrop_status = item.airdrop_status;
+        recipient.id = item.id;
+        recipient.email = item.email;
+        recipient.email_sent_time = item.email_sent_time;
+        recipient.email_start_send_time = item.email_start_send_time;
+        recipient.tx_hash = item.tx_hash;
+        recipient.wallet = item.wallet;
+      } else {
+        items.value.unshift(item);
+      }
+    });
+  }
 
   /** Users pooling */
   checkUnfinishedRecipients();
@@ -95,9 +116,10 @@ function onUserRemove(email: string) {
 }
 function onUserAdded(user: UserInterface) {
   items.value.push(JSON.parse(JSON.stringify(user)));
+  saveRecipients();
 }
 
-async function proceed() {
+async function saveRecipients() {
   const uploadItems = items.value.filter(item => !item.id && item.email);
 
   if (!userStore.jwt) {
@@ -135,7 +157,7 @@ function checkUnfinishedRecipients() {
     if (!recipient || recipient.airdrop_status >= AirdropStatus.EMAIL_SENT) {
       clearInterval(recipientInterval);
     }
-  }, 3000);
+  }, 10000);
 }
 </script>
 
@@ -155,7 +177,9 @@ function checkUnfinishedRecipients() {
 
         <div v-if="items && items.length" class="flex gap-4 items-center">
           <p>Price ≈ {{ selectedRecipients * 100 }} credits</p>
-          <Btn :disabled="!items || items.length === 0" @click="proceed()"> Save recipients </Btn>
+          <Btn :disabled="!items || items.length === 0" @click="saveRecipients()">
+            Save recipients
+          </Btn>
         </div>
       </n-space>
     </div>
