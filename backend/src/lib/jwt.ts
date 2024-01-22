@@ -1,7 +1,7 @@
-import * as jwt from "jsonwebtoken";
-import { RequestToken } from "../config/values";
-import { Context } from "../context";
-import { env } from "../config/env";
+import * as jwt from 'jsonwebtoken';
+import { RequestToken } from '../config/values';
+import { Context } from '../context';
+import { env } from '../config/env';
 
 /**
  * Generates a new request token needed to verify profile/email. Request token expires in one day.
@@ -12,7 +12,7 @@ export function generateEmailAirdropToken(email: string) {
   if (!email) {
     return null;
   }
-  const exp = "30 days";
+  const exp = '30 days';
   const subject = RequestToken.AIRDROP_EMAIL;
   const token = jwt.sign({ email }, env.APP_SECRET, {
     subject,
@@ -29,7 +29,7 @@ export function generateEmailAirdropToken(email: string) {
  */
 export function generateAdminAuthToken(wallet: string, exp?: string | number) {
   if (!exp) {
-    exp = "12h";
+    exp = '12h';
   }
   if (!wallet) {
     return null;
@@ -53,7 +53,7 @@ export function readAdminAuthToken(token: string) {
     const { wallet } = jwt.verify(token, env.APP_SECRET, {
       subject,
     }) as any;
-    if (wallet && wallet.toLowerCase() === env.ADMIN_WALLET) {
+    if (wallet && env.ADMIN_WALLET.includes(wallet.toLowerCase())) {
       return {
         wallet,
         subject,

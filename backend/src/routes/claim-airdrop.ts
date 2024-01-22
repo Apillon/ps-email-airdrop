@@ -84,6 +84,7 @@ export async function resolve(req: Request, res: Response): Promise<void> {
   } catch (e) {
     writeLog(LogType.ERROR, 'Error creating airdrop', 'claim-airdrop.ts', 'resolve', e);
     user.airdrop_status = AirdropStatus.AIRDROP_ERROR;
+    throw new Error(e);
   }
 
   await user.update();

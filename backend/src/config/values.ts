@@ -2,19 +2,19 @@
  * Serialized strategy.
  */
 export enum SerializedStrategy {
-  PROFILE = "profile",
-  DB = "db",
-  EXTENDED_DB = "extended_db",
-  ADMIN = "admin",
+  PROFILE = 'profile',
+  DB = 'db',
+  EXTENDED_DB = 'extended_db',
+  ADMIN = 'admin',
 }
 
 /**
  * Populate strategy.
  */
 export enum PopulateStrategy {
-  ADMIN = "admin",
-  PROFILE = "profile",
-  DB = "db",
+  ADMIN = 'admin',
+  PROFILE = 'profile',
+  DB = 'db',
 }
 
 /**
@@ -37,8 +37,8 @@ export enum PaginationValues {
  * Request Token types.
  */
 export enum RequestToken {
-  AUTH_ADMIN = "authAdmin",
-  AIRDROP_EMAIL = "airdropEmail",
+  AUTH_ADMIN = 'authAdmin',
+  AIRDROP_EMAIL = 'airdropEmail',
 }
 
 /**
@@ -85,4 +85,6 @@ export enum RouteErrorCode {
   SIGNATURE_NOT_PRESENT = 400005,
   REQUEST_TOKEN_NOT_PRESENT = 400006,
   AIRDROP_ALREADY_CLAIMED = 400007,
+  INVALID_SIGNATURE = 400008,
+  INVALID_ADMIN = 400009,
 }

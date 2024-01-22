@@ -105,6 +105,7 @@ async function login() {
       const res = await $api.post<LoginResponse>('/login', {
         signature,
         timestamp,
+        address: walletClient.value.account.address,
       });
       if (res.data.jwt) {
         userStore.jwt = res.data.jwt;
