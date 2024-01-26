@@ -72,28 +72,32 @@ function emailAlreadyExists(email: string) {
 }
 
 async function getUsers() {
-  const res = await $api.get<UsersResponse>('/users', { itemsPerPage: 10000 });
-  if (items.value.length === 0 || items.value.length === res.data.items.length) {
-    items.value = res.data.items;
-  } else {
-    res.data.items.forEach(item => {
-      const recipient = items.value.find(r => r.email === item.email);
-      if (recipient) {
-        recipient.airdrop_status = item.airdrop_status;
-        recipient.id = item.id;
-        recipient.email = item.email;
-        recipient.email_sent_time = item.email_sent_time;
-        recipient.email_start_send_time = item.email_start_send_time;
-        recipient.tx_hash = item.tx_hash;
-        recipient.wallet = item.wallet;
-      } else {
-        items.value.unshift(item);
-      }
-    });
-  }
+  try {
+    const res = await $api.get<UsersResponse>('/users', { itemsPerPage: 10000 });
+    if (items.value.length === 0 || items.value.length === res.data.items.length) {
+      items.value = res.data.items;
+    } else {
+      res.data.items.forEach(item => {
+        const recipient = items.value.find(r => r.email === item.email);
+        if (recipient) {
+          recipient.airdrop_status = item.airdrop_status;
+          recipient.id = item.id;
+          recipient.email = item.email;
+          recipient.email_sent_time = item.email_sent_time;
+          recipient.email_start_send_time = item.email_start_send_time;
+          recipient.tx_hash = item.tx_hash;
+          recipient.wallet = item.wallet;
+        } else {
+          items.value.unshift(item);
+        }
+      });
+    }
 
-  /** Users pooling */
-  checkUnfinishedRecipients();
+    /** Users pooling */
+    checkUnfinishedRecipients();
+  } catch (e) {
+    handleError(e);
+  }
 }
 
 async function getStatistics() {

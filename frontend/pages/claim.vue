@@ -16,10 +16,11 @@ const { handleError } = useErrors();
 
 const { address, isConnected } = useAccount();
 const { data: walletClient, refetch } = useWalletClient();
-const { connect, connectors, isLoading } = useConnect();
+const { connect, connectors } = useConnect();
 
 const loading = ref<boolean>(false);
-const claimed = ref<boolean>(false);
+const metadata = ref<Metadata | null>(null);
+const txHash = ref<string | undefined>();
 
 onBeforeMount(() => {
   if (!query.token) {
@@ -52,7 +53,6 @@ async function claimAirdrop() {
     });
     if (res.data && res.data.success) {
       message.success('You successfully claimed NFT');
-      claimed.value = true;
     }
   } catch (e) {
     handleError(e);
@@ -62,7 +62,7 @@ async function claimAirdrop() {
 </script>
 
 <template>
-  <FormShare v-if="claimed" />
+  <FormShare v-if="metadata" :metadata="metadata" />
   <div v-else class="max-w-md w-full md:px-6 my-12 mx-auto">
     <img :src="SuccessSVG" class="mx-auto" width="165" height="169" alt="airdrop" />
 
@@ -74,14 +74,7 @@ async function claimAirdrop() {
       </p>
     </div>
 
-    <Btn
-      v-if="!isConnected"
-      size="large"
-      :loading="isLoading"
-      @click="connect({ connector: connectors[0] })"
-    >
-      Connect wallet
-    </Btn>
+    <ConnectWallet v-if="!isConnected" size="large" />
     <Btn v-else size="large" :loading="loading" @click="claimAirdrop()">Claim airdrop</Btn>
   </div>
 </template>
