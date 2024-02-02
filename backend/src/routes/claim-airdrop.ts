@@ -92,7 +92,7 @@ export async function resolve(req: Request, res: Response): Promise<void> {
   }
 
   await user.update();
-  if (response.success) {
+  if (response && response.success) {
     return res.respond(200, { success: 'ok', transactionHash: response.transactionHash });
   } else {
     throw new ResourceError(RouteErrorCode.AIRDROP_ERROR);
