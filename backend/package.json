@@ -9,13 +9,14 @@
     "cron": "node -r ts-node/register --inspect ./src/scripts/start-cron",
     "dev": "npm run development:run",
     "tsc": "tsc",
+    "dev:deploy-collection": "node -r ts-node/register ./src/scripts/dev/deploy-collection",
     "db-upgrade": "node -r ts-node/register ./src/scripts/db/upgrade-db",
     "db-downgrade": "node -r ts-node/register ./src/scripts/db/downgrade-db",
     "db-rebuild": "node -r ts-node/register ./src/scripts/db/rebuild-db",
     "db-drop": "node -r ts-node/register ./src/scripts/db/drop-db"
   },
   "dependencies": {
-    "@apillon/sdk": "1.2.0-beta.1",
+    "@apillon/sdk": "2.0.0",
     "@rawmodel/core": "^3.3.4",
     "@rawmodel/parsers": "^3.3.4",
     "@rawmodel/validators": "^3.3.4",
