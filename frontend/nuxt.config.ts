@@ -25,8 +25,8 @@ const meta = {
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
-      API_BASE: CONFIG.API_BASE || 'http://localhost:3001/',
       ENV: env || Environments.dev,
+      ...CONFIG,
     },
   },
 

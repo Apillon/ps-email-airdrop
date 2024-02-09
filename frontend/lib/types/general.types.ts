@@ -1,7 +1,7 @@
 export interface ConfigInterface {
   APP_URL: string;
   API_BASE: string;
-  CHAIN_ID: string;
+  CHAIN_ID: number;
 }
 
 export type AuthResponseProfile = {
@@ -64,6 +64,7 @@ declare global {
     status: number;
   };
   type SuccessResponse = GeneralResponse<{ success: boolean }>;
+  type ClaimResponse = GeneralResponse<{ success: boolean; transactionHash: string }>;
 
   interface UserInterface {
     airdrop_status: number;

@@ -1,8 +1,32 @@
 <script lang="ts" setup>
+import { Chains } from 'lib/values/general.values';
+
 defineProps({
   metadata: { type: Object as PropType<Metadata>, default: null },
   txHash: { type: String, default: null },
 });
+
+const nuxtConfig = useRuntimeConfig();
+
+function transactionLink(transactionHash?: string | null): string {
+  switch (nuxtConfig.public.CHAIN_ID) {
+    case Chains.MOONBEAM:
+      return transactionHash
+        ? `https://moonbeam.moonscan.io/tx/${transactionHash}`
+        : 'https://moonbeam.moonscan.io';
+    case Chains.MOONBASE:
+      return transactionHash
+        ? `https://moonbase.moonscan.io/tx/${transactionHash}`
+        : 'https://moonbase.moonscan.io';
+    case Chains.ASTAR:
+      return transactionHash
+        ? `https://astar.subscan.io/tx/${transactionHash}`
+        : 'https://astar.subscan.io';
+    default:
+      console.warn('Missing chainId');
+      return '';
+  }
+}
 </script>
 
 <template>
@@ -22,7 +46,7 @@ defineProps({
         <p class="mb-4">{{ metadata.description }}</p>
         <a
           v-if="txHash"
-          :href="`https://sepolia.etherscan.io/tx/${txHash}`"
+          :href="transactionLink(txHash)"
           class="text-yellow hover:underline"
           target="_blank"
         >

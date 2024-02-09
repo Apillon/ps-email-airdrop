@@ -12,6 +12,7 @@ useHead({
 const { query } = useRoute();
 const router = useRouter();
 const message = useMessage();
+const txWait = useTxWait();
 const { handleError } = useErrors();
 
 const { address, isConnected } = useAccount();
@@ -45,20 +46,32 @@ async function claimAirdrop() {
     }
 
     const signature = await walletClient.value.signMessage({ message: `test\n${timestamp}` });
-    const res = await $api.post<SuccessResponse>('/users/claim', {
+    const res = await $api.post<ClaimResponse>('/users/claim', {
       jwt: query.token?.toString() || '',
       signature,
       address: address.value,
       timestamp,
     });
+
     if (res.data && res.data.success) {
+      txWait.hash.value = res.data.transactionHash;
+
+      console.debug('Transaction', txWait.hash.value);
+      message.info('Your NFT Mint has started');
+
+      const transaction = await txWait.wait();
+      console.log(transaction);
       message.success('You successfully claimed NFT');
+
+      loadNft();
     }
   } catch (e) {
     handleError(e);
   }
   loading.value = false;
 }
+
+async function loadNft() {}
 </script>
 
 <template>
