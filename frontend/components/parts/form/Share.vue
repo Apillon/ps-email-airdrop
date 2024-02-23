@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Chains } from 'lib/values/general.values';
+import { Chains } from '../../../lib/values/general.values';
 
 defineProps({
   metadata: { type: Object as PropType<Metadata>, default: null },

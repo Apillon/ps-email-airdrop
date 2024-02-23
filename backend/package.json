@@ -16,7 +16,7 @@
     "db-drop": "node -r ts-node/register ./src/scripts/db/drop-db"
   },
   "dependencies": {
-    "@apillon/sdk": "2.0.0",
+    "@apillon/sdk": "2.0.1",
     "@rawmodel/core": "^3.3.4",
     "@rawmodel/parsers": "^3.3.4",
     "@rawmodel/validators": "^3.3.4",

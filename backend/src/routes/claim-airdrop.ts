@@ -78,10 +78,16 @@ export async function resolve(req: Request, res: Response): Promise<void> {
 
   let response = null;
   try {
-    response = await collection.mint({
+    const mintData = {
       receivingAddress: wallet,
       quantity: 1,
-    });
+    };
+
+    if (user.nft_id) {
+      mintData['idsToMint'] = [user.nft_id];
+    }
+
+    response = await collection.mint(mintData);
     user.airdrop_status = response.success
       ? AirdropStatus.AIRDROP_COMPLETED
       : AirdropStatus.AIRDROP_ERROR;

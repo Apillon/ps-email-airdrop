@@ -27,6 +27,7 @@ describe('create user', () => {
       users: [
         {
           email: 'test@test.com',
+          nft_id: 1,
         },
       ],
     };
@@ -38,6 +39,7 @@ describe('create user', () => {
 
     expect(res.status).toBe(201);
     const dbRes = await stage.context.mysql.paramExecute('SELECT * FROM user');
+    console.log(dbRes);
     expect(dbRes.length).toBeGreaterThan(0);
   });
 });

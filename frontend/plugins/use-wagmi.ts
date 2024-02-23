@@ -4,7 +4,7 @@ import { MetaMaskConnector } from 'use-wagmi/connectors/metaMask';
 import { CoinbaseWalletConnector } from 'use-wagmi/connectors/coinbaseWallet';
 import { WalletConnectConnector } from 'use-wagmi/connectors/walletConnect';
 import { createPublicClient, http } from 'viem';
-import { Chains } from 'lib/values/general.values';
+import { Chains } from '../lib/values/general.values';
 
 export default defineNuxtPlugin(nuxtApp => {
   const nuxtConfig = useRuntimeConfig();

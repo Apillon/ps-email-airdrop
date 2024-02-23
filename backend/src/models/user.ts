@@ -1,17 +1,17 @@
-import { presenceValidator } from "@rawmodel/validators";
+import { presenceValidator } from '@rawmodel/validators';
 import {
   PopulateStrategy,
   SerializedStrategy,
   SystemErrorCode,
   ValidatorErrorCode,
-} from "../config/values";
-import { enumInclusionValidator, uniqueFieldValue } from "../lib/validators";
-import { BaseSqlModel, prop } from "./base-sql-model";
-import { stringTrimParser } from "../lib/parsers";
-import { dateParser, integerParser, stringParser } from "@rawmodel/parsers";
-import { Context } from "../context";
-import { SqlError } from "../lib/errors";
-import { getQueryParams, selectAndCountQuery } from "../lib/sql-utils";
+} from '../config/values';
+import { enumInclusionValidator, uniqueFieldValue } from '../lib/validators';
+import { BaseSqlModel, prop } from './base-sql-model';
+import { stringTrimParser } from '../lib/parsers';
+import { dateParser, integerParser, stringParser } from '@rawmodel/parsers';
+import { Context } from '../context';
+import { SqlError } from '../lib/errors';
+import { getQueryParams, selectAndCountQuery } from '../lib/sql-utils';
 
 export enum AirdropStatus {
   PENDING = 1,
@@ -27,7 +27,7 @@ export class User extends BaseSqlModel {
   /**
    * wallet
    */
-  protected _tableName = "user";
+  protected _tableName = 'user';
 
   /**
    * email
@@ -35,22 +35,18 @@ export class User extends BaseSqlModel {
   @prop({
     parser: { resolver: stringTrimParser() },
     populatable: [PopulateStrategy.DB, PopulateStrategy.ADMIN],
-    serializable: [
-      SerializedStrategy.DB,
-      SerializedStrategy.PROFILE,
-      SerializedStrategy.ADMIN,
-    ],
+    serializable: [SerializedStrategy.DB, SerializedStrategy.PROFILE, SerializedStrategy.ADMIN],
     validators: [
       {
         resolver: presenceValidator(),
         code: ValidatorErrorCode.PROFILE_EMAIL_NOT_PRESENT,
       },
       {
-        resolver: uniqueFieldValue("user", "email"),
+        resolver: uniqueFieldValue('user', 'email'),
         code: ValidatorErrorCode.PROFILE_EMAIL_ALREADY_TAKEN,
       },
     ],
-    fakeValue: "test@email.com",
+    fakeValue: 'test@email.com',
   })
   public email: string;
 
@@ -59,9 +55,11 @@ export class User extends BaseSqlModel {
    */
   @prop({
     parser: { resolver: dateParser() },
-    populatable: [PopulateStrategy.DB],
-    serializable: [SerializedStrategy.PROFILE, SerializedStrategy.ADMIN],
+    populatable: [PopulateStrategy.DB, PopulateStrategy.ADMIN],
+    serializable: [PopulateStrategy.DB, SerializedStrategy.PROFILE, SerializedStrategy.ADMIN],
     validators: [],
+    defaultValue: new Date(),
+    fakeValue: new Date(),
   })
   public email_start_send_time: Date;
 
@@ -77,16 +75,23 @@ export class User extends BaseSqlModel {
   public email_sent_time: Date;
 
   /**
+   * nft_id
+   */
+  @prop({
+    parser: { resolver: integerParser() },
+    populatable: [PopulateStrategy.DB, PopulateStrategy.ADMIN],
+    serializable: [SerializedStrategy.DB, SerializedStrategy.PROFILE, SerializedStrategy.ADMIN],
+    fakeValue: null,
+  })
+  public nft_id: number;
+
+  /**
    * wallet
    */
   @prop({
     parser: { resolver: stringParser() },
     populatable: [PopulateStrategy.DB],
-    serializable: [
-      SerializedStrategy.DB,
-      SerializedStrategy.PROFILE,
-      SerializedStrategy.ADMIN,
-    ],
+    serializable: [SerializedStrategy.DB, SerializedStrategy.PROFILE, SerializedStrategy.ADMIN],
     fakeValue: null,
   })
   public wallet: string;
@@ -139,12 +144,7 @@ export class User extends BaseSqlModel {
       await this.db().commit(conn);
     } catch (err) {
       await this.db().rollback(conn);
-      throw new SqlError(
-        err,
-        this.getContext(),
-        SystemErrorCode.DATABASE_ERROR,
-        "user/create"
-      );
+      throw new SqlError(err, this.getContext(), SystemErrorCode.DATABASE_ERROR, 'user/create');
     }
   }
 
@@ -201,16 +201,11 @@ export class User extends BaseSqlModel {
 
     // map url query with sql fields
     const fieldMap = {
-      id: "u.id",
-      email: "u.email",
-      status: "u.status",
+      id: 'u.id',
+      email: 'u.email',
+      status: 'u.status',
     };
-    const { params, filters } = getQueryParams(
-      defaultParams,
-      "u",
-      fieldMap,
-      urlQuery
-    );
+    const { params, filters } = getQueryParams(defaultParams, 'u', fieldMap, urlQuery);
     if (filters.limit === -1) {
       filters.limit = null;
     }
@@ -219,7 +214,7 @@ export class User extends BaseSqlModel {
     const sqlQuery = {
       qSelect: `
         SELECT
-          u.id, u.email,
+          u.id, u.email, u.nft_id,
           u.tx_hash, u.status,
           u.createTime, u.updateTime,
           u.airdrop_status, u.email_start_send_time,
@@ -237,31 +232,19 @@ export class User extends BaseSqlModel {
       qFilter: `
         ORDER BY ${
           filters.orderArr
-            ? `${filters.orderArr.join(", ") || "u.updateTime DESC"}`
-            : "u.updateTime DESC"
+            ? `${filters.orderArr.join(', ') || 'u.updateTime DESC'}`
+            : 'u.updateTime DESC'
         }
-        ${
-          filters.limit !== null
-            ? `LIMIT ${filters.limit} OFFSET ${filters.offset}`
-            : ""
-        };
+        ${filters.limit !== null ? `LIMIT ${filters.limit} OFFSET ${filters.offset}` : ''};
       `,
     };
 
-    const { items, total } = await selectAndCountQuery(
-      this.db(),
-      sqlQuery,
-      params,
-      "u.id"
-    );
+    const { items, total } = await selectAndCountQuery(this.db(), sqlQuery, params, 'u.id');
     const conn = await this.db().db.getConnection();
     try {
       const populatedItems = await Promise.all(
-        items.map(async (item) => {
-          const u = new User({}, this.getContext()).populate(
-            item,
-            PopulateStrategy.DB
-          );
+        items.map(async item => {
+          const u = new User({}, this.getContext()).populate(item, PopulateStrategy.DB);
           return u.serialize(serializedStrategy);
         })
       );

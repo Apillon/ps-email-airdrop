@@ -31,7 +31,6 @@ export class Cron {
   async sendEmail() {
     const mysql = await MysqlConnectionManager.getInstance();
     const conn = await mysql.start();
-    await conn.beginTransaction();
 
     try {
       const res = await conn.execute(
