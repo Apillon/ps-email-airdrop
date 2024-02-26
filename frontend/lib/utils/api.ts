@@ -161,12 +161,7 @@ class Api {
       user.logout();
     }
 
-    router.replace({
-      path: '/',
-      query: {
-        to: getEncodedPathAndQuery(route),
-      },
-    });
+    router.replace({ path: '/' });
   }
 }
 

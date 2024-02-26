@@ -50,6 +50,7 @@ function onFileUploaded(csvData: CsvItem[]) {
       email: item.email,
       email_sent_time: null,
       email_start_send_time: item.email_start_send_time,
+      nft_id: item.nft_id,
       wallet: null,
     } as UserInterface;
   });
@@ -85,6 +86,7 @@ async function getUsers() {
           recipient.email = item.email;
           recipient.email_sent_time = item.email_sent_time;
           recipient.email_start_send_time = item.email_start_send_time;
+          recipient.nft_id = item.nft_id;
           recipient.tx_hash = item.tx_hash;
           recipient.wallet = item.wallet;
         } else {
@@ -111,6 +113,7 @@ function addRecipient() {
     email: '',
     email_sent_time: null,
     email_start_send_time: null,
+    nft_id: null,
     wallet: null,
   });
 }

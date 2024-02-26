@@ -2,6 +2,9 @@ export interface ConfigInterface {
   APP_URL: string;
   API_BASE: string;
   CHAIN_ID: number;
+  CONTRACT_ADDRESS: string | null;
+  METADATA_BASE_URI: string | null;
+  METADATA_TOKEN: string | null;
 }
 
 export type AuthResponseProfile = {
@@ -29,6 +32,7 @@ declare global {
     email: string;
     email_start_send_time: string;
     email_send_time?: string | null;
+    nft_id?: number | null;
     tx_hash?: string | null;
     wallet: string;
     airdrop_status?: number | null;
@@ -73,6 +77,7 @@ declare global {
     email_sent_time: string | null;
     email_start_send_time: string | null;
     id?: number | null;
+    nft_id?: number | null;
     status?: number;
     tx_hash?: string | null;
     updateTime?: string;

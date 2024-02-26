@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+type Address = `0x${string}`;
+
 import SuccessSVG from '~/assets/images/success.svg';
 import { useAccount, useConnect, useWalletClient } from 'use-wagmi';
 
@@ -9,6 +11,7 @@ useHead({
   title: 'Apillon email airdrop prebuilt solution',
 });
 
+const config = useRuntimeConfig();
 const { query } = useRoute();
 const router = useRouter();
 const message = useMessage();
@@ -18,10 +21,9 @@ const { handleError } = useErrors();
 const { address, isConnected } = useAccount();
 const { data: walletClient, refetch } = useWalletClient();
 const { connect, connectors } = useConnect();
+const { initContract, getTokenOfOwner, getTokenUri } = useContract();
 
 const loading = ref<boolean>(false);
-const metadata = ref<Metadata | null>(null);
-const txHash = ref<string | undefined>();
 
 onBeforeMount(() => {
   if (!query.token) {
@@ -54,16 +56,28 @@ async function claimAirdrop() {
     });
 
     if (res.data && res.data.success) {
-      txWait.hash.value = res.data.transactionHash;
+      txWait.hash.value = res.data.transactionHash as Address;
 
       console.debug('Transaction', txWait.hash.value);
       message.info('Your NFT Mint has started');
 
-      const transaction = await txWait.wait();
-      console.log(transaction);
+      const receipt = await txWait.wait();
+      console.debug(receipt);
       message.success('You successfully claimed NFT');
 
-      loadNft();
+      if (
+        config.public.METADATA_BASE_URI &&
+        config.public.METADATA_TOKEN &&
+        receipt.data?.logs[0].topics[3]
+      ) {
+        getMetadata(Number(receipt.data?.logs[0].topics[3]), res.data.transactionHash);
+      } else if (receipt.data?.to && receipt.data?.logs[0].topics[3]) {
+        const nftId = Number(receipt.data?.logs[0].topics[3]);
+
+        await loadNft(receipt.data.to, nftId, res.data.transactionHash);
+      } else {
+        message.error('Mint failed, missing NFT ID!');
+      }
     }
   } catch (e) {
     handleError(e);
@@ -71,12 +85,60 @@ async function claimAirdrop() {
   loading.value = false;
 }
 
-async function loadNft() {}
+async function loadNft(contractAddress: Address, id: number, transactionHash: string) {
+  try {
+    await initContract(contractAddress);
+    const url = await getTokenUri(id);
+
+    const metadata = await fetch(url).then(response => {
+      return response.json();
+    });
+    router.push({ name: 'share', query: { ...metadata, nftId: id, txHash: transactionHash } });
+  } catch (e) {
+    console.error(e);
+    message.error('Fetch failed, missing NFT metadata!');
+  }
+}
+
+async function getMyNFT(contract: Address) {
+  try {
+    await initContract(contract);
+    const id = await getTokenOfOwner(0);
+    const url = await getTokenUri(Number(id));
+
+    const metadata = await fetch(url).then(response => {
+      return response.json();
+    });
+
+    if (metadata) {
+      message.success('You already claimed NFT');
+      router.push({ name: 'share', query: { ...metadata } });
+    } else {
+      return false;
+    }
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+}
+
+async function getMetadata(id: number, transactionHash: string) {
+  try {
+    const url = `${config.public.METADATA_BASE_URI}${id}.json?token=${config.public.METADATA_TOKEN}`;
+
+    const metadata = await fetch(url).then(response => {
+      return response.json();
+    });
+    router.push({ name: 'share', query: { ...metadata, nftId: id, txHash: transactionHash } });
+  } catch (e) {
+    console.error(e);
+    message.error('Fetch failed, missing NFT metadata!');
+  }
+}
 </script>
 
 <template>
-  <FormShare v-if="metadata" :metadata="metadata" />
-  <div v-else class="max-w-md w-full md:px-6 my-12 mx-auto">
+  <div class="max-w-md w-full md:px-6 my-12 mx-auto">
     <img :src="SuccessSVG" class="mx-auto" width="165" height="169" alt="airdrop" />
 
     <div class="my-8 text-center">

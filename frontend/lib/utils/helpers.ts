@@ -74,3 +74,25 @@ export function areArraysEqual(a1: any, a2: any, sorted = false) {
 export function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text);
 }
+
+/**
+ * OG data
+ */
+export function prepareOG(
+  title = 'Mint your NFT Token',
+  description = 'Powered by Apillon.',
+  image = '/images/logo/apillon.jpg',
+  url = 'https://apillon.io/'
+) {
+  return {
+    title,
+    ogTitle: title,
+    twitterTitle: title,
+    description,
+    ogDescription: description,
+    twitterDescription: description,
+    ogImage: image,
+    twitterImage: image,
+    ogUrl: url,
+  };
+}

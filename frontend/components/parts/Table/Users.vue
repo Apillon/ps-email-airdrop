@@ -24,6 +24,7 @@ const newUser = ref<UserInterface>({
   email: '',
   email_sent_time: null,
   email_start_send_time: null,
+  nft_id: null,
   wallet: null,
 });
 
@@ -47,6 +48,23 @@ const createColumns = (): DataTableColumns<UserInterface> => {
           });
         } else {
           return h('span', { class: 'whitespace-nowrap' }, row.email);
+        }
+      },
+    },
+    {
+      key: 'nft_id',
+      title: 'NFT ID',
+      render(row: UserInterface, index: number) {
+        if (isEditable(row, index)) {
+          return h(NInput, {
+            value: newUser.value.nft_id,
+            type: 'number',
+            onUpdateValue(v: string) {
+              newUser.value.nft_id = parseInt(v);
+            },
+          });
+        } else {
+          return h('span', { class: 'whitespace-nowrap' }, row.nft_id);
         }
       },
     },
@@ -134,8 +152,10 @@ function addItem(user: UserInterface) {
   }
 
   user.email = newUser.value.email;
+  user.nft_id = newUser.value.nft_id;
   user.email_start_send_time = newUser.value.email_start_send_time;
   newUser.value.email = '';
+  newUser.value.nft_id = null;
   newUser.value.email_start_send_time = null;
 
   emit('addUser', newUser.value);
