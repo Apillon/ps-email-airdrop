@@ -23,7 +23,7 @@ const newUser = ref<UserInterface>({
   airdrop_status: AirdropStatus.PENDING,
   email: '',
   email_sent_time: null,
-  email_start_send_time: null,
+  email_start_send_time: new Date(),
   nft_id: null,
   wallet: null,
 });
@@ -156,7 +156,7 @@ function addItem(user: UserInterface) {
   user.email_start_send_time = newUser.value.email_start_send_time;
   newUser.value.email = '';
   newUser.value.nft_id = null;
-  newUser.value.email_start_send_time = null;
+  newUser.value.email_start_send_time = new Date();
 
   emit('addUser', newUser.value);
 }
