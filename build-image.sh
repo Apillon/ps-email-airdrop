@@ -1,3 +1,5 @@
-docker build -t ps-email-airdrop:beta.0 .
-docker tag ps-email-airdrop:beta itkalmiadev/ps-email-airdrop:beta.0
-docker push itkalmiadev/ps-email-airdrop:beta.0
+set -e
+
+docker build -t ps-email-airdrop .
+docker tag ps-email-airdrop ps-email-airdrop:latest
+# docker save -o ps-email-airdrop.tar ps-email-airdrop:latest

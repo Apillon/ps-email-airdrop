@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: airdrop-api
-          image: itkalmiadev/ps-email-airdrop:beta
+          image: ps-email-airdrop:beta
           env:
             - name: APP_URL
               value: 'http://your-custom-url:3001'

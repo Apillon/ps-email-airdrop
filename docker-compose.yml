@@ -1,39 +1,39 @@
+#####
+# This is an example of docker compose file for Apillon pre-built solutions. You are encouraged to change it according to your needs.
+#####
+
 version: '3.8'
 
 services:
   airdrop_db:
     image: mysql
     container_name: airdrop_db
+    
+    ## Enviroment variables can be set in .env files or from build environment
+    ## Here is how you can use .env file (note: should be separate for each container)
     env_file:
-      - .env.deploy
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      - .env.sql.deploy
+    
+    ## If you want to read variables from build environment comment out above section and uncomment below
+    # environment:
+    #   MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    #   MYSQL_DATABASE: ${MYSQL_DATABASE}
+
     ports:
       - '3306:3306'
     restart: always
 
   airdrop_app:
-    image: itkalmiadev/ps-email-airdrop:beta
+    image: ps-email-airdrop:latest
     container_name: airdrop_app
     depends_on:
       - airdrop_db
+
+    ## Enviroment variables can be set in .env files or from build environment
+    ## Here is how you can use .env file (note: should be separate for each container)
     env_file:
       - .env.deploy
-    environment:
-      APP_URL: ${APP_URL}
-      ADMIN_WALLET: ${ADMIN_WALLET}
-      APILLON_KEY: ${APILLON_KEY}
-      APILLON_SECRET: ${APILLON_SECRET}
-      COLLECTION_UUID: ${COLLECTION_UUID}
-      SMTP_HOST: ${SMTP_HOST}
-      SMTP_PORT: ${SMTP_PORT}
-      SMTP_USERNAME: ${SMTP_USERNAME}
-      SMTP_PASSWORD: ${SMTP_PASSWORD}
-      SMTP_EMAIL_FROM: ${SMTP_EMAIL_FROM}
-      SMTP_NAME_FROM: ${SMTP_NAME_FROM}
-      API_HOST: ${API_HOST}
-      API_PORT: ${API_PORT}
+
     ports:
       - '8080:3000'
     restart: always
