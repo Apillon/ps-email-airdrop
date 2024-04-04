@@ -9,6 +9,7 @@
     "cron": "node -r ts-node/register --inspect ./src/scripts/start-cron",
     "dev": "npm run development:run",
     "tsc": "tsc",
+    "build": "tsc",
     "dev:deploy-collection": "node -r ts-node/register ./src/scripts/dev/deploy-collection",
     "db-upgrade": "node -r ts-node/register ./src/scripts/db/upgrade-db",
     "db-downgrade": "node -r ts-node/register ./src/scripts/db/downgrade-db",
