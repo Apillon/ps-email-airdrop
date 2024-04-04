@@ -8,7 +8,7 @@ Simplify your NFT distribution process by easily distributing digital collectibl
     -   Automate email notifications with claim instructions for recipients.
 
 **Before getting started, ensure you have:**
--   Created digital collectibles using Apillon.
+-   Created NFT collection using Apillon.
 -   Access to an email server's details.
 -   A specialized Ethereum wallet for admin panel access.
 -   Apillon API key and secret for connection.
