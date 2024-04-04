@@ -1,0 +1,70 @@
+/* Fade */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/**
+ * Btn animation - hover bounce
+*/
+.hover-bounce {
+  animation-name: bounceOut;
+  animation-duration: 50s;
+
+  &:hover {
+    animation-name: bounceIn;
+    animation-duration: 50s;
+  }
+  &.locked {
+    animation-duration: 0s;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: translateY(0px);
+  }
+  1% {
+    transform: translateY(-4px);
+  }
+  2%,
+  100% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes bounceOut {
+  0% {
+    transform: translateY(-3px);
+  }
+  1% {
+    transform: translateY(1px);
+  }
+  2%,
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/**
+ * Uploading
+*/
+.animation-uploading {
+  display: inline-block;
+  animation: uploading 0.8s infinite;
+}
+
+@keyframes uploading {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+}

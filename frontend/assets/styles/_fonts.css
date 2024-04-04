@@ -1,0 +1,353 @@
+/* New Spirit */
+@font-face {
+  font-family: 'New Spirit';
+  src:
+    url('~/assets/fonts/new_spirit_medium-webfont.woff2') format('woff2'),
+    url('~/assets/fonts/new_spirit_medium-webfont.woff') format('woff');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'apillon';
+  src: url('~/assets/fonts/apillon.eot?49hmrm');
+  src:
+    url('~/assets/fonts/apillon.eot?49hmrm#iefix') format('embedded-opentype'),
+    url('~/assets/fonts/apillon.ttf?49hmrm') format('truetype'),
+    url('~/assets/fonts/apillon.woff?49hmrm') format('woff'),
+    url('~/assets/fonts/apillon.svg?49hmrm#apillon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^='icon-'],
+[class*=' icon-'] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'apillon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+@layer utilities {
+  .icon-apillon {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'apillon' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+.icon-subsocial:before {
+  content: '\e961';
+}
+.icon-erc-4437:before {
+  content: '\e952';
+}
+.icon-erc-20:before {
+  content: '\e953';
+}
+.icon-erc-721:before {
+  content: '\e954';
+}
+.icon-rmrk:before {
+  content: '\e955';
+}
+.icon-brand-membership:before {
+  content: '\e956';
+}
+.icon-loyalty-program:before {
+  content: '\e957';
+}
+.icon-api-keys:before {
+  content: '\e958';
+}
+.icon-nft-mint-airdrop:before {
+  content: '\e959';
+}
+.icon-self-hosted-nft:before {
+  content: '\e95a';
+}
+.icon-poap:before {
+  content: '\e95b';
+}
+.icon-nft-drop:before {
+  content: '\e95c';
+}
+.icon-token-gating:before {
+  content: '\e95d';
+}
+.icon-file-sharing:before {
+  content: '\e95e';
+}
+.icon-gift:before {
+  content: '\e95f';
+}
+.icon-change:before {
+  content: '\e960';
+}
+.icon-credits:before {
+  content: '\e951';
+}
+.icon-stack:before {
+  content: '\e950';
+}
+.icon-grid-view:before {
+  content: '\e94d';
+}
+.icon-list-view:before {
+  content: '\e94e';
+}
+.icon-table-view:before {
+  content: '\e94f';
+}
+.icon-go-to:before {
+  content: '\e948';
+}
+.icon-wide-down:before {
+  content: '\e949';
+}
+.icon-wide-left:before {
+  content: '\e94a';
+}
+.icon-wide-right:before {
+  content: '\e94b';
+}
+.icon-wide-up:before {
+  content: '\e94c';
+}
+.icon-magic-link:before {
+  content: '\e946';
+}
+.icon-wallet:before {
+  content: '\e947';
+}
+.icon-image:before {
+  content: '\e944';
+}
+.icon-NFTs:before {
+  content: '\e945';
+}
+.icon-nft:before {
+  content: '\e945';
+}
+.icon-docs:before {
+  content: '\e943';
+}
+.icon-deploy:before {
+  content: '\e939';
+}
+.icon-hosting:before {
+  content: '\e93a';
+}
+.icon-preview:before {
+  content: '\e93f';
+}
+.icon-restore:before {
+  content: '\e942';
+}
+.icon-create-folder:before {
+  content: '\e940';
+}
+.icon-refresh:before {
+  content: '\e941';
+}
+.icon-upload:before {
+  content: '\e93e';
+}
+.icon-left-long:before {
+  content: '\e938';
+}
+.icon-add:before {
+  content: '\e93b';
+}
+.icon-clear:before {
+  content: '\e93c';
+}
+.icon-search:before {
+  content: '\e93d';
+}
+.icon-file:before {
+  content: '\e935';
+}
+.icon-folder:before {
+  content: '\e936';
+}
+.icon-copy:before {
+  content: '\e937';
+}
+.icon-soon:before {
+  content: '\e932';
+}
+.icon-wow:before {
+  content: '\e934';
+}
+.icon-back:before {
+  content: '\e933';
+}
+.icon-google:before {
+  content: '\e931';
+}
+.icon-expand:before {
+  content: '\e930';
+}
+.icon-checkbox-off:before {
+  content: '\e900';
+}
+.icon-checkbox-on:before {
+  content: '\e901';
+}
+.icon-radio-off:before {
+  content: '\e902';
+}
+.icon-radio-on:before {
+  content: '\e903';
+}
+.icon-anonymous:before {
+  content: '\e904';
+}
+.icon-discord:before {
+  content: '\e905';
+}
+.icon-gitbook:before {
+  content: '\e906';
+}
+.icon-github:before {
+  content: '\e907';
+}
+.icon-linkedin:before {
+  content: '\e908';
+}
+.icon-mail:before {
+  content: '\e909';
+}
+.icon-reddit:before {
+  content: '\e90a';
+}
+.icon-telegram:before {
+  content: '\e90b';
+}
+.icon-twitter:before {
+  content: '\e90c';
+}
+.icon-twitter-1:before {
+  content: '\e90d';
+}
+.icon-acess:before {
+  content: '\e90e';
+}
+.icon-analytics:before {
+  content: '\e90f';
+}
+.icon-authentication:before {
+  content: '\e910';
+}
+.icon-billing:before {
+  content: '\e911';
+}
+.icon-computing:before {
+  content: '\e912';
+}
+.icon-hamburger:before {
+  content: '\e913';
+}
+.icon-home:before {
+  content: '\e914';
+}
+.icon-project-setting:before {
+  content: '\e915';
+}
+.icon-service-monitor:before {
+  content: '\e916';
+}
+.icon-storage:before {
+  content: '\e917';
+}
+.icon-apillon:before {
+  content: '\e918';
+}
+.icon-apillon-icon:before {
+  content: '\e919';
+}
+.icon-check:before {
+  content: '\e91a';
+}
+.icon-info:before {
+  content: '\e91b';
+}
+.icon-network:before {
+  content: '\e91c';
+}
+.icon-new:before {
+  content: '\e91d';
+}
+.icon-security:before {
+  content: '\e91e';
+}
+.icon-star:before {
+  content: '\e91f';
+}
+.icon-status:before {
+  content: '\e920';
+}
+.icon-tip:before {
+  content: '\e921';
+}
+.icon-vault:before {
+  content: '\e922';
+}
+.icon-video:before {
+  content: '\e923';
+}
+.icon-view:before {
+  content: '\e924';
+}
+.icon-web:before {
+  content: '\e925';
+}
+.icon-down:before {
+  content: '\e926';
+}
+.icon-left:before {
+  content: '\e927';
+}
+.icon-right:before {
+  content: '\e928';
+}
+.icon-up:before {
+  content: '\e929';
+}
+.icon-arrow-right:before {
+  content: '\e92a';
+}
+.icon-close:before {
+  content: '\e92b';
+}
+.icon-delete:before {
+  content: '\e92c';
+}
+.icon-download:before {
+  content: '\e92d';
+}
+.icon-edit:before {
+  content: '\e92e';
+}
+.icon-more:before {
+  content: '\e92f';
+}

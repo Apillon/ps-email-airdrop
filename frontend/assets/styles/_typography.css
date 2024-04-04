@@ -1,0 +1,108 @@
+/* Headline 1 */
+h1,
+.h1 {
+  @apply font-sans font-bold;
+  font-size: 1.75rem;
+  line-height: 1.43;
+}
+
+/* Headline 2 */
+h2,
+.h2 {
+  @apply font-sans font-bold;
+  font-size: 1.5rem;
+  line-height: 1.5;
+
+  + p {
+    @apply mt-2;
+  }
+}
+
+/* Headline 3 */
+h3,
+.h3 {
+  @apply font-newSpirit font-medium text-2xl;
+
+  + p {
+    @apply mt-2;
+  }
+}
+
+/* Headline 4 */
+h4,
+.h4 {
+  @apply font-sans font-bold;
+  font-size: 1.125rem;
+  line-height: 1.55;
+
+  + p,
+  + ul {
+    @apply mt-2;
+  }
+}
+
+/* Headline 5 */
+h5,
+.h5 {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Headline 6 */
+h6 {
+  @apply font-sans font-bold uppercase;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  letter-spacing: 0.25em;
+}
+
+p {
+  @apply body-md text-body;
+
+  + h2,
+  + .h2,
+  + h3,
+  + .h3,
+  + h4,
+  + .h4,
+  + p,
+  + ul {
+    @apply mt-4;
+  }
+}
+
+ul {
+  @apply body-md;
+}
+
+label {
+  @apply font-bold cursor-pointer;
+
+  > a {
+    @apply text-primary;
+  }
+}
+
+button,
+[role='button'],
+[type='reset'],
+[type='submit'] {
+  @apply relative font-sans;
+  font-size: 0.875rem;
+  line-height: 1.715;
+}
+
+.body-lg {
+  font-size: 1rem;
+  line-height: 1.625;
+}
+
+.body-md {
+  font-size: 0.875rem;
+  line-height: 1.715;
+}
+
+.body-sm {
+  font-size: 0.75rem;
+  line-height: 1.666666;
+}

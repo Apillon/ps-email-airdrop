@@ -1,0 +1,33 @@
+#kalm {
+  --wcm-z-index: 3000;
+
+  .flip-clock {
+    @apply flex justify-between;
+
+    &__piece {
+      @apply relative bg-bg-light rounded-2xl mx-0 w-20 pt-4 pb-3;
+
+      &:not(:last-child) {
+        &::before,
+        &::after {
+          content: '';
+          @apply absolute left-[112%] block w-[6px] h-[6px] rounded-full bg-bodyDark;
+        }
+        &::before {
+          @apply top-9;
+        }
+        &::after {
+          @apply top-12;
+        }
+      }
+    }
+
+    &__slot {
+      @apply text-xs lowercase;
+    }
+
+    .no-animation__card {
+      @apply font-bold;
+    }
+  }
+}
