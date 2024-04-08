@@ -1,0 +1,39 @@
+#####
+# This is an example of docker compose file for Apillon pre-built solutions. You are encouraged to change it according to your needs.
+#####
+
+version: '3.8'
+
+services:
+  airdrop_db:
+    image: mysql
+    container_name: airdrop_db
+    
+    ## Enviroment variables can be set in .env files or from build environment
+    ## Here is how you can use .env file (note: should be separate for each container)
+    env_file:
+      - .env.sql.deploy
+    
+    ## If you want to read variables from build environment comment out above section and uncomment below
+    # environment:
+    #   MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    #   MYSQL_DATABASE: ${MYSQL_DATABASE}
+
+    ports:
+      - '3306:3306'
+    restart: always
+
+  airdrop_app:
+    image: ps-email-airdrop:latest
+    container_name: airdrop_app
+    depends_on:
+      - airdrop_db
+
+    ## Enviroment variables can be set in .env files or from build environment
+    ## Here is how you can use .env file (note: should be separate for each container)
+    env_file:
+      - .env.deploy
+
+    ports:
+      - '8080:3000'
+    restart: always
