@@ -1,21 +1,21 @@
-import * as express from "express";
-import * as cors from "cors";
-import { Server } from "http";
-import { IEnv } from "./config/env";
-import { Context } from "./context";
-import { MySql } from "./lib/mysql";
-import { inject as injectContext } from "./middlewares/context";
-import { inject as injectCors } from "./middlewares/cors";
+import * as express from 'express';
+import * as cors from 'cors';
+import { Server } from 'http';
+import { IEnv } from './config/env';
+import { Context } from './context';
+import { MySql } from './lib/mysql';
+import { inject as injectContext } from './middlewares/context';
+import { inject as injectCors } from './middlewares/cors';
 // import { inject as injectCompression } from './middlewares/compression';
-import { inject as injectErrors } from "./middlewares/errors";
-import { inject as injectDataParser } from "./middlewares/parser";
-import { inject as injectRenders } from "./middlewares/renders";
-import { inject as injectGetRoot } from "./routes/get-root";
-import { inject as injectCreateUser } from "./routes/create-user";
-import { inject as injectGetUser } from "./routes/get-user";
-import { inject as injectGetStatistics } from "./routes/get-statistics";
-import { inject as injectClaimAirdrop } from "./routes/claim-airdrop";
-import { inject as injectAdminLogin } from "./routes/admin-login";
+import { inject as injectErrors } from './middlewares/errors';
+import { inject as injectDataParser } from './middlewares/parser';
+import { inject as injectRenders } from './middlewares/renders';
+import { inject as injectGetRoot } from './routes/get-root';
+import { inject as injectCreateUser } from './routes/create-user';
+import { inject as injectGetUser } from './routes/get-user';
+import { inject as injectGetStatistics } from './routes/get-statistics';
+import { inject as injectClaimAirdrop } from './routes/claim-airdrop';
+import { inject as injectAdminLogin } from './routes/admin-login';
 
 export interface Request extends express.Request {
   context: Context;
@@ -90,7 +90,7 @@ export class HttpServer {
     await new Promise((res) => {
       this.server = this.app.listen(
         this.config.env.API_PORT,
-        this.config.env.API_HOST
+        this.config.env.API_HOST,
       );
       res(null);
     });
@@ -114,18 +114,18 @@ export class HttpServer {
    * Returns an array of all available routes.
    */
   public collectRoutes(): { method: string; path: string }[] {
-    return this.app.router["stack"]
+    return this.app.router['stack']
       .map((middleware) => middleware.route)
       .filter((route) => !!route)
       .map((route) =>
         Object.keys(route.methods).map((method) => ({
           method: method.toUpperCase(),
           path: route.path,
-        }))
+        })),
       )
       .reduce((a, b) => a.concat(b), [])
       .sort((a, b) =>
-        `${a.path}@${a.method}`.localeCompare(`${b.path}@${b.method}`)
+        `${a.path}@${a.method}`.localeCompare(`${b.path}@${b.method}`),
       );
   }
 }

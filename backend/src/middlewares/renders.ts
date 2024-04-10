@@ -17,10 +17,10 @@ export function createRespond(): RequestHandler {
   return (req: Request, res: Response, next: NextFunction) => {
     res.respond = (status: number, data: Object, meta?: Object) => {
       res.status(status).json({
-        'data': data,
-        'id': req.context.id,
-        'meta': meta,
-        'status': status
+        data: data,
+        id: req.context.id,
+        meta: meta,
+        status: status,
       });
     };
     next();
@@ -34,12 +34,12 @@ export function createThrow(): RequestHandler {
   return (req: Request, res: Response, next: NextFunction) => {
     res.throw = (status: number, errors: any) => {
       res.status(status).json({
-        'errors': (Array.isArray(errors) ? errors : [errors]).map((error) => ({
-          'code': error.code,
-          'message': error.message
+        errors: (Array.isArray(errors) ? errors : [errors]).map((error) => ({
+          code: error.code,
+          message: error.message,
         })),
-        'id': req.context.id,
-        'status': status
+        id: req.context.id,
+        status: status,
       });
     };
     next();

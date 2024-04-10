@@ -1,6 +1,6 @@
-import { IEnv } from "./config/env";
-import { readAdminAuthToken } from "./lib/jwt";
-import { MySql } from "./lib/mysql";
+import { IEnv } from './config/env';
+import { readAdminAuthToken } from './lib/jwt';
+import { MySql } from './lib/mysql';
 
 /**
  * Request object context holds personalized request-based information.

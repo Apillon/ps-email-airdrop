@@ -1,5 +1,5 @@
-import { Migration, MigrationConnection } from "ts-mysql-migrate";
-import { ConnectionOptions, createPool } from "mysql2";
+import { Migration, MigrationConnection } from 'ts-mysql-migrate';
+import { ConnectionOptions, createPool } from 'mysql2';
 
 let dbMigration: Migration = null;
 
@@ -62,7 +62,7 @@ async function initMigrations() {
 
   dbMigration = new Migration({
     conn: pool as unknown as MigrationConnection,
-    tableName: "migrations",
+    tableName: 'migrations',
     dir: `./src/migrations/`,
   });
 

@@ -1,8 +1,8 @@
-import { Application, RequestHandler } from "express";
-import { IEnv } from "../config/env";
-import { Context } from "../context";
-import { NextFunction, Request, Response } from "../http";
-import { MySql } from "../lib/mysql";
+import { Application, RequestHandler } from 'express';
+import { IEnv } from '../config/env';
+import { Context } from '../context';
+import { NextFunction, Request, Response } from '../http';
+import { MySql } from '../lib/mysql';
 
 /**
  * Applies context middleware to application.

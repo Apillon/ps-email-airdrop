@@ -25,6 +25,6 @@ import { env } from '../../config/env';
     drop: false,
   });
   console.log(collection.serialize());
-})().catch(async err => {
+})().catch(async (err) => {
   console.log(err);
 });

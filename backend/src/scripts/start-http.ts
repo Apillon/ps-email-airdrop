@@ -1,6 +1,6 @@
-import { HttpServer, MySql } from "..";
-import { env } from "../config/env";
-import { writeLog, LogType } from "../lib/logger";
+import { HttpServer, MySql } from '..';
+import { env } from '../config/env';
+import { writeLog, LogType } from '../lib/logger';
 
 const mysql = new MySql(env);
 const api = new HttpServer({ env, mysql });
@@ -11,16 +11,16 @@ const api = new HttpServer({ env, mysql });
   writeLog(
     LogType.INFO,
     `Running server on ${env.API_HOST}:${env.API_PORT}`,
-    "start-http.ts",
-    ""
+    'start-http.ts',
+    '',
   );
 })().catch(async (err) => {
   writeLog(
     LogType.INFO,
-    "Error during context creation and server run",
-    "start-http.ts",
-    "",
-    err
+    'Error during context creation and server run',
+    'start-http.ts',
+    '',
+    err,
   );
   await api.close();
   await mysql.close();

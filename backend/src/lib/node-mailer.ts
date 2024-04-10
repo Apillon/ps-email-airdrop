@@ -1,10 +1,10 @@
-import * as nodemailer from "nodemailer";
-import { env } from "../config/env";
-import { Options, MailOptions } from "nodemailer/lib/smtp-transport";
-import { MailTemplates } from "../templates/mail-templates";
-import { writeLog, LogType } from "./logger";
-import { Attachment } from "nodemailer/lib/mailer";
-import * as path from "path";
+import * as nodemailer from 'nodemailer';
+import { env } from '../config/env';
+import { Options, MailOptions } from 'nodemailer/lib/smtp-transport';
+import { MailTemplates } from '../templates/mail-templates';
+import { writeLog, LogType } from './logger';
+import { Attachment } from 'nodemailer/lib/mailer';
+import * as path from 'path';
 
 /**
  * Send email via SMTP server
@@ -41,10 +41,10 @@ export async function SmtpSend(mail: MailOptions): Promise<boolean> {
   } catch (err) {
     writeLog(
       LogType.ERROR,
-      "Error while sending email",
-      "lib/node-mailer",
-      "SmtpSend request",
-      err
+      'Error while sending email',
+      'lib/node-mailer',
+      'SmtpSend request',
+      err,
     );
   }
 }
@@ -66,22 +66,22 @@ export async function SmtpSendTemplate(
   templateName: string,
   templateData: object,
   senderName?: string,
-  senderEmail?: string
+  senderEmail?: string,
 ): Promise<boolean> {
   let templName = templateName;
 
   let template = MailTemplates.getTemplate(templName);
 
-  if (!template && !templName.startsWith("en-")) {
+  if (!template && !templName.startsWith('en-')) {
     writeLog(
       LogType.INFO,
       `Template not found: ${templName}! Retrying with 'en-' prefix.`,
-      "lib/smtp-sender",
-      "SmtpSendTemplate request"
+      'lib/smtp-sender',
+      'SmtpSendTemplate request',
     );
-    const altName = templName.split("-");
-    altName[0] = "en";
-    templName = altName.join("-");
+    const altName = templName.split('-');
+    altName[0] = 'en';
+    templName = altName.join('-');
     template = MailTemplates.getTemplate(templName);
   }
 
@@ -89,8 +89,8 @@ export async function SmtpSendTemplate(
     writeLog(
       LogType.ERROR,
       `Template not found: ${templName}!`,
-      "lib/smtp-sender",
-      "SmtpSendTemplate request"
+      'lib/smtp-sender',
+      'SmtpSendTemplate request',
     );
     return false;
   }
@@ -101,15 +101,15 @@ export async function SmtpSendTemplate(
       senderName ? senderName : env.SMTP_NAME_FROM
     } <${
       senderEmail ? senderEmail : env.SMTP_EMAIL_FROM
-    }>" to "${mailAddresses.join(";")}"`,
-    "node-mailer.ts",
-    "SmtpSendTemplate"
+    }>" to "${mailAddresses.join(';')}"`,
+    'node-mailer.ts',
+    'SmtpSendTemplate',
   );
   const mail = {
     from: `${senderName ? senderName : env.SMTP_NAME_FROM} <${
       senderEmail ? senderEmail : env.SMTP_EMAIL_FROM
     }>`,
-    to: mailAddresses.join(";"),
+    to: mailAddresses.join(';'),
     subject: subject,
     html: template(templateData),
     // attachments: [
@@ -148,8 +148,8 @@ export async function SmtpSendTemplate(
     writeLog(
       LogType.ERROR,
       `error: ${err}`,
-      "lib/smtp-sender",
-      "SmtpSendTemplate request"
+      'lib/smtp-sender',
+      'SmtpSendTemplate request',
     );
   }
 }
@@ -165,7 +165,7 @@ export async function SmtpSendTemplateWithAttachments(
   templateData: object,
   attachments: Attachment[],
   senderName?: string,
-  senderEmail?: string
+  senderEmail?: string,
 ): Promise<boolean> {
   const template = MailTemplates.getTemplate(templateName);
 
@@ -173,23 +173,23 @@ export async function SmtpSendTemplateWithAttachments(
     writeLog(
       LogType.ERROR,
       `Template not found: ${templateName}!`,
-      "lib/smtp-sender",
-      "SmtpSendTemplate request"
+      'lib/smtp-sender',
+      'SmtpSendTemplate request',
     );
     return false;
   }
 
   attachments.push({
-    filename: "logo.png",
+    filename: 'logo.png',
     path: `${path.dirname(process.mainModule.filename)}/files/logo.png`,
-    cid: "logo.png",
+    cid: 'logo.png',
   });
 
   const mail = {
     from: `${senderName ? senderName : env.SMTP_NAME_FROM} <${
       senderEmail ? senderEmail : env.SMTP_EMAIL_FROM
     }>`,
-    to: mailAddresses.join(";"),
+    to: mailAddresses.join(';'),
     subject: subject,
     html: template(templateData),
     attachments: attachments,
@@ -222,8 +222,8 @@ export async function SmtpSendTemplateWithAttachments(
     writeLog(
       LogType.ERROR,
       `error: ${err}`,
-      "lib/smtp-sender",
-      "SmtpSendTemplate request"
+      'lib/smtp-sender',
+      'SmtpSendTemplate request',
     );
   }
 }
@@ -254,10 +254,10 @@ export async function SMTPverify(): Promise<boolean> {
   } catch (err) {
     writeLog(
       LogType.ERROR,
-      "SMTP mailer error",
-      "lib/smtp-sender",
-      "SMTPverify",
-      err
+      'SMTP mailer error',
+      'lib/smtp-sender',
+      'SMTPverify',
+      err,
     );
     return false;
   }

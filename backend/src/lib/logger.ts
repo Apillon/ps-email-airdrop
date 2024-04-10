@@ -1,5 +1,5 @@
-import * as moment from "moment";
-import { env } from "../config/env";
+import * as moment from 'moment';
+import { env } from '../config/env';
 import {
   red,
   yellow,
@@ -12,23 +12,23 @@ import {
   gray,
   bgCyan,
   cyan,
-} from "colors/safe";
+} from 'colors/safe';
 
 export enum LogType {
-  INFO = "INF",
-  MESSAGE = "MSG",
-  ERROR = "ERR",
-  SQL = "SQL",
+  INFO = 'INF',
+  MESSAGE = 'MSG',
+  ERROR = 'ERR',
+  SQL = 'SQL',
 }
 
 export function writeLog(
   type: LogType,
   message: any,
-  fileSource = "",
-  functionSource = "",
-  error?: Error
+  fileSource = '',
+  functionSource = '',
+  error?: Error,
 ) {
-  if (env.LOG_TARGET == "console") {
+  if (env.LOG_TARGET == 'console') {
     // setTheme({
     //   info: [bgYellow, black],
     //   message: [bgWhite, blue],
@@ -60,29 +60,29 @@ export function writeLog(
     }
     console.log(
       bgColor(black(`[${type}]`)),
-      gray(`[${moment().format("YYYY-MM-DD HH:mm:ss Z")}]:`),
+      gray(`[${moment().format('YYYY-MM-DD HH:mm:ss Z')}]:`),
       color(
         `${
-          typeof message == "string"
+          typeof message == 'string'
             ? message
             : JSON.stringify(message, null, 2)
-        }${message && error && error.message ? ", " : ""}${
-          error ? `${error.message}` || "" : ""
-        }`
+        }${message && error && error.message ? ', ' : ''}${
+          error ? `${error.message}` || '' : ''
+        }`,
       ),
-      gray(`[${fileSource}/${functionSource}]`)
+      gray(`[${fileSource}/${functionSource}]`),
     );
-  } else if (env.LOG_TARGET == "console_plain") {
+  } else if (env.LOG_TARGET == 'console_plain') {
     console.log(
-      `[${type}][${moment().format("YYYY-MM-DD HH:mm:ss Z")}]:`,
+      `[${type}][${moment().format('YYYY-MM-DD HH:mm:ss Z')}]:`,
       `${
-        typeof message == "string" ? message : JSON.stringify(message, null, 2)
-      }${message && error && error.message ? ", " : ""}${
-        error ? `${error.message}` || "" : ""
+        typeof message == 'string' ? message : JSON.stringify(message, null, 2)
+      }${message && error && error.message ? ', ' : ''}${
+        error ? `${error.message}` || '' : ''
       }`,
-      `[${fileSource}/${functionSource}]`
+      `[${fileSource}/${functionSource}]`,
     );
-  } else if (env.LOG_TARGET == "minimal") {
-    console.log("log", type, message);
+  } else if (env.LOG_TARGET == 'minimal') {
+    console.log('log', type, message);
   }
 }

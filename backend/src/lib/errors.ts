@@ -1,8 +1,8 @@
-import { Model } from "@rawmodel/core";
-import messages from "../config/messages";
-import { writeLog, LogType } from "./logger";
-import { Context } from "../context";
-import { SystemErrorCode } from "../config/values";
+import { Model } from '@rawmodel/core';
+import messages from '../config/messages';
+import { writeLog, LogType } from './logger';
+import { Context } from '../context';
+import { SystemErrorCode } from '../config/values';
 
 /**
  * Handled system error.
@@ -26,9 +26,9 @@ export class SystemError extends Error {
       LogType.ERROR,
       //  `(user: ${ctx && ctx.user ? `${ctx.user.id} ${ctx.user.email}` : "NA"})`,
       `(id: ${ctx.id} : "NA"})`,
-      "SystemError",
+      'SystemError',
       sourceFunction,
-      this
+      this,
     );
   }
 }
@@ -57,9 +57,9 @@ export class ResourceError extends Error {
     writeLog(
       LogType.ERROR,
       `(id: ${ctx?.id} : "NA"})`,
-      "ResourceError",
+      'ResourceError',
       sourceFunction,
-      this
+      this,
     );
   }
 }
@@ -89,9 +89,9 @@ export class UnauthenticatedError extends Error {
       LogType.MESSAGE,
       // `(user: ${ctx && ctx.user ? `${ctx.user.id} ${ctx.user.email}` : "NA"})`,
       `(id: ${ctx.id} : "NA"})`,
-      "UnauthenticatedError",
+      'UnauthenticatedError',
       sourceFunction,
-      this
+      this,
     );
   }
 }
@@ -122,9 +122,9 @@ export class UnauthorizedError extends Error {
       //`(user: ${ctx && ctx.user ? `${ctx.user.id} ${ctx.user.email}` : "NA"})`,
 
       `(id: ${ctx.id} : "NA"})`,
-      "UnauthorizedError",
+      'UnauthorizedError',
       sourceFunction,
-      this
+      this,
     );
   }
 }
@@ -158,14 +158,14 @@ export class ValidationError extends Error {
           path: x.path,
         });
       })
-      .join(", ");
+      .join(', ');
 
     writeLog(
       LogType.MESSAGE,
       `${validationErrorsStr}`,
-      "ValidationError",
+      'ValidationError',
       sourceFunction,
-      this
+      this,
     );
   }
 }
@@ -188,9 +188,9 @@ export class ProcedureError extends Error {
     writeLog(
       LogType.MESSAGE,
       `${errMsg} | Result: ${JSON.stringify(this.sqlResult)}`,
-      "ProcedureError",
-      "",
-      this
+      'ProcedureError',
+      '',
+      this,
     );
   }
 }
@@ -212,12 +212,12 @@ export class SqlError extends Error {
     ctx?: Context,
     code?: number,
     query?: string,
-    sourceFunction?: string
+    sourceFunction?: string,
   ) {
     super(
       messages(code) ||
         messages(SystemErrorCode.DATABASE_ERROR) ||
-        error.message
+        error.message,
     );
 
     this.name = this.constructor.name;
@@ -228,10 +228,10 @@ export class SqlError extends Error {
 
     writeLog(
       LogType.ERROR,
-      `( sql: ${query || "NA"}): ${error ? error.message : ""}`,
-      "SqlError",
+      `( sql: ${query || 'NA'}): ${error ? error.message : ''}`,
+      'SqlError',
       sourceFunction,
-      this
+      this,
     );
   }
 }

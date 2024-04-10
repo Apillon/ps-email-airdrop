@@ -1,6 +1,6 @@
-import { Migration, MigrationConnection } from "ts-mysql-migrate";
-import { env } from "../../config/env";
-import { ConnectionOptions, createPool } from "mysql2";
+import { Migration, MigrationConnection } from 'ts-mysql-migrate';
+import { env } from '../../config/env';
+import { ConnectionOptions, createPool } from 'mysql2';
 
 let seedMigration: Migration = null;
 let testDbMigration: Migration = null;
@@ -52,7 +52,7 @@ export async function dropTestDatabase() {
 }
 
 async function initMigrations() {
-  env.APP_ENV = "testing";
+  env.APP_ENV = 'testing';
   const poolConfig: ConnectionOptions = {
     host: process.env.MYSQL_HOST_TEST,
     port: parseInt(process.env.MYSQL_PORT_TEST),
@@ -67,14 +67,14 @@ async function initMigrations() {
 
   seedMigration = new Migration({
     conn: pool as unknown as MigrationConnection,
-    tableName: "seeds",
+    tableName: 'seeds',
     dir: `./src/tests/seed/`,
     silent: true,
   });
 
   testDbMigration = new Migration({
     conn: pool as unknown as MigrationConnection,
-    tableName: "migrations",
+    tableName: 'migrations',
     dir: `./src/migrations/`,
     silent: true,
   });

@@ -1,6 +1,6 @@
-import { env } from "../config/env";
-import * as SqlString from "sqlstring";
-import { MySql } from "./mysql";
+import { env } from '../config/env';
+import * as SqlString from 'sqlstring';
+import { MySql } from './mysql';
 
 export interface SqlQueryObject {
   /**
@@ -35,7 +35,7 @@ export function getQueryParams(
   defaultParameters: Object,
   tableAlias: string,
   fieldMap: any,
-  urlQuery: any
+  urlQuery: any,
 ) {
   const limit =
     parseInt(urlQuery.itemsPerPage) || env.PAGE_DEFAULT_LIMIT || 100;
@@ -44,7 +44,7 @@ export function getQueryParams(
     urlQuery.sortBy,
     urlQuery.sortDesc,
     tableAlias,
-    fieldMap
+    fieldMap,
   );
 
   delete urlQuery.page;
@@ -67,7 +67,7 @@ export function getQueryParams(
 
 function getOrderField(names, orders, tableAlias, map = {}) {
   if (!names) {
-    names = ["id"];
+    names = ['id'];
   }
   const orderArray = [];
   for (const [idx, name] of names.entries()) {
@@ -75,19 +75,19 @@ function getOrderField(names, orders, tableAlias, map = {}) {
     if (!map[name]) {
       // SqlString.escape prevents SQL injection!
       adjustedName = SqlString.escapeId(
-        `${tableAlias ? `${tableAlias}.` : ""}${name}`
+        `${tableAlias ? `${tableAlias}.` : ''}${name}`,
       );
     }
     if (orders && orders.length) {
       if (Array.isArray(adjustedName)) {
         for (const nameEntry of adjustedName) {
           orderArray.push(
-            `${nameEntry} ${orders[idx] == "true" ? "DESC" : ""}`
+            `${nameEntry} ${orders[idx] == 'true' ? 'DESC' : ''}`,
           );
         }
       } else {
         orderArray.push(
-          `${adjustedName} ${orders[idx] == "true" ? "DESC" : ""}`
+          `${adjustedName} ${orders[idx] == 'true' ? 'DESC' : ''}`,
         );
       }
     } else {
@@ -101,21 +101,21 @@ export async function selectAndCountQuery(
   db: MySql,
   queryObj: SqlQueryObject,
   params: any,
-  countByField: string
+  countByField: string,
 ): Promise<{ items: Array<any>; total: number }> {
   const querySelect = [
     queryObj.qSelect,
     queryObj.qFrom,
     queryObj.qGroup,
     queryObj.qFilter,
-  ].join("\n");
+  ].join('\n');
 
   const queryCount = `
   SELECT COUNT(*) as total
     FROM (
-      SELECT ${countByField || "id"}
+      SELECT ${countByField || 'id'}
       ${queryObj.qFrom}
-      ${queryObj.qGroup ? `GROUP BY ${countByField || "id"}` : ""}
+      ${queryObj.qGroup ? `GROUP BY ${countByField || 'id'}` : ''}
     ) AS T;
   `;
 
@@ -124,10 +124,10 @@ export async function selectAndCountQuery(
   const workers = [];
   try {
     workers.push(
-      db.paramExecute(querySelect, params).then((res) => (items = res))
+      db.paramExecute(querySelect, params).then((res) => (items = res)),
     );
     workers.push(
-      db.paramExecute(queryCount, params).then((res) => (totalResults = res))
+      db.paramExecute(queryCount, params).then((res) => (totalResults = res)),
     );
     await Promise.all(workers);
   } catch (err) {
@@ -140,5 +140,5 @@ export async function selectAndCountQuery(
 }
 
 export function dateToSqlString(date: Date): string {
-  return date.toISOString().replace(/T/, " ").replace(/Z/, "");
+  return date.toISOString().replace(/T/, ' ').replace(/Z/, '');
 }

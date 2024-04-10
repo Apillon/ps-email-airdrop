@@ -1,4 +1,6 @@
-export async function upgrade(queryFn: (query: string, values?: any[]) => Promise<Array<any>>) {
+export async function upgrade(
+  queryFn: (query: string, values?: any[]) => Promise<Array<any>>,
+) {
   await queryFn(`
     CREATE TABLE IF NOT EXISTS \`user\` (
       \`id\` INT NOT NULL AUTO_INCREMENT,
@@ -19,7 +21,9 @@ export async function upgrade(queryFn: (query: string, values?: any[]) => Promis
     CREATE UNIQUE INDEX \`email_UNIQUE\` ON \`user\` (\`email\` ASC) VISIBLE;
   `);
 }
-export async function downgrade(queryFn: (query: string, values?: any[]) => Promise<Array<any>>) {
+export async function downgrade(
+  queryFn: (query: string, values?: any[]) => Promise<Array<any>>,
+) {
   await queryFn(`
     DROP TABLE IF EXISTS \`user\` ;
   `);

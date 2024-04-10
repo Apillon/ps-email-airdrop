@@ -1,14 +1,14 @@
-import { BaseModel } from "./base-model";
-import { ModelConfig, prop } from "@rawmodel/core";
-import { Context } from "../context";
-import { integerParser, dateParser } from "@rawmodel/parsers";
+import { BaseModel } from './base-model';
+import { ModelConfig, prop } from '@rawmodel/core';
+import { Context } from '../context';
+import { integerParser, dateParser } from '@rawmodel/parsers';
 import {
   PopulateStrategy,
   SerializedStrategy,
   ValidatorErrorCode,
-} from "../config/values";
-import { PoolConnection } from "mysql2/promise";
-import { presenceValidator, enumInclusionValidator } from "../lib/validators";
+} from '../config/values';
+import { PoolConnection } from 'mysql2/promise';
+import { presenceValidator, enumInclusionValidator } from '../lib/validators';
 
 export { prop };
 
@@ -120,7 +120,7 @@ export abstract class BaseSqlModel extends BaseModel {
       SELECT * FROM ${this._tableName}
       WHERE id = @id
     `,
-      { id }
+      { id },
     );
 
     if (data && data.length) {
@@ -137,7 +137,7 @@ export abstract class BaseSqlModel extends BaseModel {
       WHERE id = @id
     `,
       { id },
-      conn
+      conn,
     );
 
     if (data && data.length) {
@@ -159,11 +159,11 @@ export abstract class BaseSqlModel extends BaseModel {
       INSERT INTO \`${this._tableName}\`
       ( ${Object.keys(serializedModel)
         .map((x) => `\`${x}\``)
-        .join(", ")} )
+        .join(', ')} )
       VALUES (
         ${Object.keys(serializedModel)
           .map((key) => `@${key}`)
-          .join(", ")}
+          .join(', ')}
       )`;
 
       await this.db().paramExecute(createQuery, serializedModel, conn);
@@ -171,7 +171,7 @@ export abstract class BaseSqlModel extends BaseModel {
         const req = await this.db().paramExecute(
           `SELECT last_insert_id() AS id;`,
           null,
-          conn
+          conn,
         );
         this.id = req[0].id;
         await this.populateByIdConn(this.id, conn);
@@ -192,7 +192,7 @@ export abstract class BaseSqlModel extends BaseModel {
 
   public async duplicateInsert(
     strategy: SerializedStrategy,
-    conn?: PoolConnection
+    conn?: PoolConnection,
   ) {
     const serializedModel = this.serialize(strategy);
     let isSingleTrans = false;
@@ -205,11 +205,11 @@ export abstract class BaseSqlModel extends BaseModel {
       INSERT INTO \`${this._tableName}\`
       ( ${Object.keys(serializedModel)
         .map((x) => `\`${x}\``)
-        .join(", ")} )
+        .join(', ')} )
       VALUES (
         ${Object.keys(serializedModel)
           .map((key) => `@${key}`)
-          .join(", ")}
+          .join(', ')}
       )
       ON DUPLICATE KEY UPDATE uuid = uuid`;
 
@@ -218,7 +218,7 @@ export abstract class BaseSqlModel extends BaseModel {
         const req = await this.db().paramExecute(
           `SELECT last_insert_id() AS id;`,
           null,
-          conn
+          conn,
         );
         this.id = req[0].id;
         await this.populateByIdConn(this.id, conn);
@@ -239,7 +239,7 @@ export abstract class BaseSqlModel extends BaseModel {
 
   public async update(
     strategy: SerializedStrategy = SerializedStrategy.DB,
-    options?: { userId?: number; conn?: PoolConnection }
+    options?: { userId?: number; conn?: PoolConnection },
   ) {
     const serializedModel = this.serialize(strategy);
     let conn = null;
@@ -267,9 +267,9 @@ export abstract class BaseSqlModel extends BaseModel {
       SET
         ${Object.keys(serializedModel)
           .map((x) => `\`${x}\` = @${x}`)
-          .join(",\n")}
+          .join(',\n')}
       WHERE id = @id
-      ${userId ? `AND user_id = ${userId}` : ""}
+      ${userId ? `AND user_id = ${userId}` : ''}
       `;
 
       // re-set id parameter for where clause.

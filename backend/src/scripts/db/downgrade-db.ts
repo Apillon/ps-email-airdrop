@@ -1,6 +1,6 @@
-import * as readline from "readline";
-import { env } from "../../config/env";
-import { downgradeDatabase } from "../../lib/migrations";
+import * as readline from 'readline';
+import { env } from '../../config/env';
+import { downgradeDatabase } from '../../lib/migrations';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -18,7 +18,7 @@ rl.question(
   (answer) => {
     steps = parseInt(answer);
     if (steps) {
-      console.log(`Downgrading ${steps > 0 ? steps : "ALL"} version(s).`);
+      console.log(`Downgrading ${steps > 0 ? steps : 'ALL'} version(s).`);
     } else {
       console.log(`Invalid input. Exiting.`);
       process.exit(0);
@@ -28,12 +28,12 @@ rl.question(
 
     run()
       .then(() => {
-        console.log("Complete!");
+        console.log('Complete!');
         process.exit(0);
       })
       .catch((err) => {
         console.log(err);
         process.exit(1);
       });
-  }
+  },
 );

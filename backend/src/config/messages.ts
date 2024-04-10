@@ -3,14 +3,14 @@ import {
   SystemErrorCode,
   ValidatorErrorCode,
   RouteErrorCode,
-} from "./values";
+} from './values';
 
 /**
  * Message codes.
  */
 export default (code) => {
   const customMessages = {
-    [RouteErrorCode.INVALID_REQUEST]: "INVALID REQUEST",
+    [RouteErrorCode.INVALID_REQUEST]: 'INVALID REQUEST',
   };
 
   return (
@@ -19,6 +19,6 @@ export default (code) => {
     SystemErrorCode[code] ||
     ValidatorErrorCode[code] ||
     RouteErrorCode[code] ||
-    "UNKNOWN_ERROR"
+    'UNKNOWN_ERROR'
   );
 };

@@ -1,7 +1,7 @@
-import { Application } from "express";
-import { NextFunction, Request, Response } from "../http";
-import { AuthenticateAdmin } from "../middlewares/authentication";
-import { User } from "../models/user";
+import { Application } from 'express';
+import { NextFunction, Request, Response } from '../http';
+import { AuthenticateAdmin } from '../middlewares/authentication';
+import { User } from '../models/user';
 
 /**
  * Installs new route on the provided application.
@@ -9,11 +9,11 @@ import { User } from "../models/user";
  */
 export function inject(app: Application) {
   app.get(
-    "/users/statistics",
+    '/users/statistics',
     AuthenticateAdmin,
     (req: Request, res: Response, next: NextFunction) => {
       resolve(req, res).catch(next);
-    }
+    },
   );
 }
 

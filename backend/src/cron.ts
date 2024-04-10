@@ -40,7 +40,7 @@ export class Cron {
           AND email_start_send_time < '${dateToSqlString(new Date())}'
           FOR UPDATE
         ;
-       `
+       `,
       );
       const users = res[0] as Array<any>;
 
@@ -49,20 +49,25 @@ export class Cron {
       for (let i = 0; i < users.length; i++) {
         try {
           const token = await generateEmailAirdropToken(users[i].email);
-          await SmtpSendTemplate([users[i].email], 'Claim your NFT', 'en-airdrop-claim', {
-            link: `${env.APP_URL}/claim?token=${token}`,
-          });
+          await SmtpSendTemplate(
+            [users[i].email],
+            'Claim your NFT',
+            'en-airdrop-claim',
+            {
+              link: `${env.APP_URL}/claim?token=${token}`,
+            },
+          );
           updates.push(
             `(${users[i].id}, '${users[i].email}', ${AirdropStatus.EMAIL_SENT}, '${dateToSqlString(
-              new Date()
-            )}')`
+              new Date(),
+            )}')`,
           );
         } catch (e) {
           writeLog(LogType.ERROR, e, 'cron.ts', 'sendEmail');
           updates.push(
             `(${users[i].id}, '${users[i].email}', ${AirdropStatus.EMAIL_ERROR}, '${dateToSqlString(
-              new Date()
-            )}')`
+              new Date(),
+            )}')`,
           );
         }
       }

@@ -13,9 +13,12 @@ import { env } from '../config/env';
  * @param app ExpressJS application.
  */
 export function inject(app: Application) {
-  app.post('/users/claim', (req: Request, res: Response, next: NextFunction) => {
-    resolve(req, res).catch(next);
-  });
+  app.post(
+    '/users/claim',
+    (req: Request, res: Response, next: NextFunction) => {
+      resolve(req, res).catch(next);
+    },
+  );
 }
 
 export async function resolve(req: Request, res: Response): Promise<void> {
@@ -92,14 +95,23 @@ export async function resolve(req: Request, res: Response): Promise<void> {
       ? AirdropStatus.AIRDROP_COMPLETED
       : AirdropStatus.AIRDROP_ERROR;
   } catch (e) {
-    writeLog(LogType.ERROR, 'Error creating airdrop', 'claim-airdrop.ts', 'resolve', e);
+    writeLog(
+      LogType.ERROR,
+      'Error creating airdrop',
+      'claim-airdrop.ts',
+      'resolve',
+      e,
+    );
     user.airdrop_status = AirdropStatus.AIRDROP_ERROR;
     throw new Error(e);
   }
 
   await user.update();
   if (response && response.success) {
-    return res.respond(200, { success: 'ok', transactionHash: response.transactionHash });
+    return res.respond(200, {
+      success: 'ok',
+      transactionHash: response.transactionHash,
+    });
   } else {
     throw new ResourceError(RouteErrorCode.AIRDROP_ERROR);
   }

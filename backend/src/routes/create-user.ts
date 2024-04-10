@@ -10,14 +10,21 @@ import { ValidationError } from '../lib/errors';
  * @param app ExpressJS application.
  */
 export function inject(app: Application) {
-  app.post('/users', AuthenticateAdmin, (req: Request, res: Response, next: NextFunction) => {
-    resolve(req, res).catch(next);
-  });
+  app.post(
+    '/users',
+    AuthenticateAdmin,
+    (req: Request, res: Response, next: NextFunction) => {
+      resolve(req, res).catch(next);
+    },
+  );
 }
 
 export async function resolve(req: Request, res: Response): Promise<void> {
   const { context, body } = req;
-  const users = new BatchUsers({}, context).populate(body, PopulateStrategy.ADMIN);
+  const users = new BatchUsers({}, context).populate(
+    body,
+    PopulateStrategy.ADMIN,
+  );
 
   try {
     await users.validate();

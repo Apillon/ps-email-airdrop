@@ -14,7 +14,8 @@
     "db-upgrade": "node -r ts-node/register ./src/scripts/db/upgrade-db",
     "db-downgrade": "node -r ts-node/register ./src/scripts/db/downgrade-db",
     "db-rebuild": "node -r ts-node/register ./src/scripts/db/rebuild-db",
-    "db-drop": "node -r ts-node/register ./src/scripts/db/drop-db"
+    "db-drop": "node -r ts-node/register ./src/scripts/db/drop-db",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "dependencies": {
     "@apillon/sdk": "2.0.1",

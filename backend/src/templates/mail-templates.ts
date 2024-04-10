@@ -1,7 +1,7 @@
-import * as fs from "fs";
-import * as path from "path";
-import * as handlebars from "handlebars";
-import { LogType, writeLog } from "../lib/logger";
+import * as fs from 'fs';
+import * as path from 'path';
+import * as handlebars from 'handlebars';
+import { LogType, writeLog } from '../lib/logger';
 
 export class MailTemplates {
   /**
@@ -21,17 +21,17 @@ export class MailTemplates {
       try {
         const html = fs.readFileSync(
           `${this.TEMPLATE_DIR}/${templateName}.html`,
-          "utf8"
+          'utf8',
         );
         this.templates[templateName] = handlebars.compile(html);
       } catch (err) {
         writeLog(
           LogType.ERROR,
           path.resolve(`./mail/${templateName}.html`),
-          "mail-templates.ts",
-          "getTemplate"
+          'mail-templates.ts',
+          'getTemplate',
         );
-        writeLog(LogType.ERROR, err, "mail-templates.ts", "getTemplate");
+        writeLog(LogType.ERROR, err, 'mail-templates.ts', 'getTemplate');
         return null;
       }
     }

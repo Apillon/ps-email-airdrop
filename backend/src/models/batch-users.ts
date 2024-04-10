@@ -1,18 +1,18 @@
-import { arrayLengthValidator, presenceValidator } from "@rawmodel/validators";
+import { arrayLengthValidator, presenceValidator } from '@rawmodel/validators';
 import {
   PopulateStrategy,
   SerializedStrategy,
   SystemErrorCode,
   ValidatorErrorCode,
-} from "../config/values";
-import { BaseSqlModel, prop } from "./base-sql-model";
-import { User } from "./user";
-import { Context } from "../context";
-import { SqlError } from "../lib/errors";
-import { PoolConnection } from "mysql2/promise";
+} from '../config/values';
+import { BaseSqlModel, prop } from './base-sql-model';
+import { User } from './user';
+import { Context } from '../context';
+import { SqlError } from '../lib/errors';
+import { PoolConnection } from 'mysql2/promise';
 
 export class BatchUsers extends BaseSqlModel {
-  protected _tableName = "user";
+  protected _tableName = 'user';
 
   /**
    * id
@@ -63,7 +63,7 @@ export class BatchUsers extends BaseSqlModel {
         err,
         this.getContext(),
         SystemErrorCode.DATABASE_ERROR,
-        "disinfection-block-batch/create"
+        'disinfection-block-batch/create',
       );
     }
     return;
@@ -88,7 +88,7 @@ export class BatchUsers extends BaseSqlModel {
         INSERT INTO \`${this._tableName}\`
         ( ${Object.keys(batch[0])
           .map((x) => `\`${x}\``)
-          .join(", ")} )
+          .join(', ')} )
         VALUES
           ${batch
             .map((serializedModel, idx) => {
@@ -97,10 +97,10 @@ export class BatchUsers extends BaseSqlModel {
                 .map((key) => {
                   return `@${idx}_${key}`;
                 })
-                .join(", ")}
+                .join(', ')}
             )`;
             })
-            .join(", ")}
+            .join(', ')}
         `;
 
         await this.db().paramExecuteBatch(createQuery, batch, conn);

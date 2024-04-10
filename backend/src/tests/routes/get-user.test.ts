@@ -33,13 +33,15 @@ describe('get user', () => {
       .get('/users')
       .set(
         'Authorization',
-        `Bearer ${generateAdminAuthToken(ethers.Wallet.createRandom().address)}`
+        `Bearer ${generateAdminAuthToken(ethers.Wallet.createRandom().address)}`,
       );
     expect(res2.status).toBe(403);
   });
 
   test('get user', async () => {
-    const res = await request(stage.app).get('/users').set('Authorization', `Bearer ${token}`);
+    const res = await request(stage.app)
+      .get('/users')
+      .set('Authorization', `Bearer ${token}`);
 
     expect(res.body.data.items.length).toBe(1);
     expect(res.body.data.total).toBe(1);
