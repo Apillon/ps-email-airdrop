@@ -22,6 +22,12 @@ npm install
 npm run dev
 ```
 
+Upgrade database (apply [migrations](./src/migrations/)):
+
+```sh
+npm run db-upgrade
+```
+
 To run CRON job:
 
 ```sh
@@ -42,9 +48,9 @@ npm run cron
 
 ## Environment variables
 
-For local development and running app you will need to configure some environment variables. List of all supported vars can be found in [`src/config/env.ts`](/src/config/env.ts).
+For local development and running app you will need to configure some environment variables. List of all supported vars can be found in [`src/config/env.ts`](./src/config/env.ts).
 
-For local development you should create `.env` file. To run this app in Docker, you can create `.env.deploy` and `.env.sql.deploy` and use provided [`docker-compose.yml`](/docker-compose.yml)
+For local development you should create `.env` file. To run this app in Docker, you can create `.env.deploy` and `.env.sql.deploy` and use provided [`docker-compose.yml`](./docker-compose.yml)
 
 ### .env
 
@@ -52,7 +58,7 @@ For running locally, create new `.env` file in project root folder (`backend/`) 
 
 ### .env.deploy
 
-For running a docker image with [`docker-compose.yml`](/docker-compose.yml) you should create `.env.deploy` file like this:
+For running a docker image with [`docker-compose.yml`](./docker-compose.yml) you should create `.env.deploy` file like this:
 
 ```sh
 
@@ -85,7 +91,7 @@ API_PORT: 3000
 
 ### .env.sql.deploy
 
-For running a mysql docker image with [`docker-compose.yml`](/docker-compose.yml) you should create `.env.sql.deploy` file like this:
+For running a mysql docker image with [`docker-compose.yml`](./docker-compose.yml) you should create `.env.sql.deploy` file like this:
 
 ```sh
 MYSQL_ROOT_PASSWORD: Pa55worD?! # set your DB password (same as in .env.deploy)
@@ -95,7 +101,7 @@ MYSQL_DATABASE: airdrop
 
 ## Deploying with docker
 
-Build docker image with script [`./build-image.sh`](/build-image.sh) script or by running docker build command, for example:
+Build docker image with script [`./build-image.sh`](./build-image.sh) script or by running docker build command, for example:
 
 ```sh
 docker build -t ps-email-airdrop .
@@ -117,7 +123,7 @@ For running tests, check if all environment variables with suffix `_TEST` are co
 ```yml
 # TEST config
 MYSQL_HOST_TEST: 127.0.0.1
-MYSQL_DB_TEST: Poap_test
+MYSQL_DB_TEST: ps_email_airdrop_test
 MYSQL_USER_TEST:
 MYSQL_PASSWORD_TEST:
 MYSQL_POOL_TEST: 20
