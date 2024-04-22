@@ -40,6 +40,8 @@ RUN npm install -g typescript pm2@latest
 ADD ./package-lock.json ${appDir}
 ADD ./package.json ${appDir}
 ADD ./ ${appDir}/
+RUN mkdir -p ./dist/templates/mail/ 
+RUN cp ./src/templates/mail/*.html ./dist/templates/mail/
 
 RUN npm install 
 RUN npm run build
