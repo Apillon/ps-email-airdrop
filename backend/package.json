@@ -12,6 +12,7 @@
     "build": "tsc",
     "dev:deploy-collection": "node -r ts-node/register ./src/scripts/dev/deploy-collection",
     "db-upgrade": "node -r ts-node/register ./src/scripts/db/upgrade-db",
+    "db-upgrade:ci": "node -r ts-node/register ./src/scripts/db/upgrade-db --F",
     "db-downgrade": "node -r ts-node/register ./src/scripts/db/downgrade-db",
     "db-rebuild": "node -r ts-node/register ./src/scripts/db/rebuild-db",
     "db-drop": "node -r ts-node/register ./src/scripts/db/drop-db",
