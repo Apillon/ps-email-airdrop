@@ -86,3 +86,5 @@ bin/deploy/env.staging.yml
 .nitro
 .cache
 dist
+
+*.tar
